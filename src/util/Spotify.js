@@ -59,9 +59,15 @@ export async function getAccessToken(code) {
         return response.json();
     })
     .then(data => {
-        localStorage.setItem("access_token", data.access_token);
+        const access_token = data.access_token;
+        const expiration_time = Date.now() + (data.expires_in * 1000);
+
+        localStorage.setItem("access_token", access_token);
+        localStorage.setItem("expiration_time", expiration_time);
+
         localStorage.removeItem("state");
         localStorage.removeItem("verifier");
+
         return data.access_token;
     })
     .catch(error => {
@@ -71,20 +77,33 @@ export async function getAccessToken(code) {
     return result;
 }
 
+export function isTokenExpired() {
+    const token = localStorage.getItem("access_token");
+    const expiration_time = localStorage.getItem("expiration_time");
+    return !token || Date.now() > expiration_time;
+}
+
 // Call Web API
-export async function fetchProfile(token) {
-    const profile = await fetch("https://api.spotify.com/v1/me", {
-        headers: {
-            Authorization: `Bearer ${token}`,
-        },
-    })
-    .then((response) => response.json())
-    .then((data) => {
-        console.log(data);
-        return data;
-    })
-    .catch((err) => {
-        console.log(err);
-    });
-    return profile;
+export async function fetchProfile() {
+    const token = localStorage.getItem("access_token");
+
+    if (isTokenExpired()) {
+        console.log("token invalid, redirecting to auth");
+        redirectToAuthCodeFlow();
+    } else {
+        const profile = await fetch("https://api.spotify.com/v1/me", {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            return data;
+        })
+        .catch((error) => {
+            console.error("Error fetching profile: ", error);
+        });
+    
+        return profile;
+    }
 }
