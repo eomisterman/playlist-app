@@ -3,18 +3,17 @@ import { fetchProfile, getAccessToken, redirectToAuthCodeFlow } from './util/Spo
 import { useEffect, useState } from 'react';
 
 const App = () => {
-
   return (
-    <>
-      <h1 className="m-2">Playlist App</h1>
-      <Navigation />
+    <section className='flex'>
+      <Sidebar />
       <Routes>
         <Route index path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/callback" element={<Callback />} />
+        <Route path="/profile" element={<Profile />} />
         <Route path="*" element={<NoMatch />} />
       </Routes>
-    </>
+    </section>
   );
 }
 
@@ -25,15 +24,16 @@ const Sidebar = () => {
    */
 
   return (
-    <section>
+    <section id="sidebar" className="basis-48 block">
       <h1>Playlist App</h1>
-      <Link>Drafts</Link>
-      <Link>Search</Link>
-      <Link>Playlists</Link>
-      <Link>Top Songs</Link>
-      <Link>Top Artists</Link>
-      <Link>Genres</Link>
-      <Link>Liked Songs</Link>
+      <Link className="block" to="/profile">Profile</Link>
+      <Link className="block">Drafts</Link>
+      <Link className="block">Search</Link>
+      <Link className="block">Playlists</Link>
+      <Link className="block">Top Songs</Link>
+      <Link className="block">Top Artists</Link>
+      <Link className="block">Genres</Link>
+      <Link className="block">Liked Songs</Link>
       {/* <h3>Hover (Radio)</h3>
       <button>Log out</button> */}
     </section>
@@ -99,6 +99,12 @@ const Callback = () => {
     }
   }, [code, responseState, localState, navigate]);
 
+}
+
+const Profile = () => {
+  return (
+    <h1>Profile</h1>
+  );
 }
 
 const Navigation = () => {
