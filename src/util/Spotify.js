@@ -83,8 +83,11 @@ export function isTokenExpired() {
     return !token || Date.now() > expiration_time;
 }
 
-// Call Web API
-export async function fetchProfile() {
+/**
+ * GET - Current User's Profile
+ * @returns {Promise} Profile object
+ */
+export async function getProfile() {
     const token = localStorage.getItem("access_token");
 
     if (isTokenExpired()) {
@@ -105,5 +108,58 @@ export async function fetchProfile() {
         });
     
         return profile;
+    }
+}
+
+/**
+ * GET - Search for tracks
+ * @param {String} query Search query
+ * @returns {Promise} Search results
+ */
+export async function getSearchTracks(query) {
+    const token = localStorage.getItem("access_token");
+    const encodedQuery = encodeURIComponent(query);
+
+    if (isTokenExpired()) {
+        console.log("token invalid, redirecting to auth");
+        redirectToAuthCodeFlow();
+    } else {
+        const searchResults = await fetch(`https://api.spotify.com/v1/search?q=${encodedQuery}&type=track`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            let results = data.tracks.items.map((track) => {
+                return {
+                    id: track.id,
+                    name: track.name,
+                    href: track.href,
+                    uri: track.uri,
+                    artists: track.artists.map((artist) => {
+                        return {
+                            id: artist.id,
+                            name: artist.name,
+                            href: artist.href,
+                            uri: artist.uri
+                        }
+                    }),
+                    album: {
+                        id: track.album.id,
+                        name: track.album.name,
+                        href: track.album.href,
+                        uri: track.album.uri
+                    },
+                }
+            });
+
+            return results;
+        })
+        .catch((error) => {
+            console.error("Error fetching search results: ", error);
+        });
+    
+        return searchResults;
     }
 }
