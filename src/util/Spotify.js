@@ -30,7 +30,7 @@ export async function redirectToAuthCodeFlow() {
     params.append("response_type", "code");
     params.append("redirect_uri", import.meta.env.VITE_REDIRECT_URI);
     params.append("state", state);
-    params.append("scope", "user-read-private user-read-email");
+    params.append("scope", import.meta.env.VITE_SPOTIFY_SCOPES);
     params.append("code_challenge_method", "S256");
     params.append("code_challenge", challenge);
 
@@ -138,7 +138,7 @@ export async function getSearchTracks(query) {
         })
         .then((response) => response.json())
         .then((data) => {
-            let results = data.tracks.items.map((track) => {
+            let tracks = data.tracks.items.map((track) => {
                 return {
                     id: track.id,
                     name: track.name,
@@ -161,7 +161,7 @@ export async function getSearchTracks(query) {
                 }
             });
 
-            return results;
+            return tracks;
         })
         .catch((error) => {
             console.error("Error fetching search results: ", error);
@@ -227,5 +227,57 @@ export async function getUserPlaylists() {
         });
     
         return playlists;
+    }
+}
+
+/**
+ * GET - User's Top Tracks
+ * @param {String} time_range Time range of top tracks
+ * @returns {Promise} Top tracks
+ */
+export async function getUserTopTracks(time_range) {
+    const token = localStorage.getItem("access_token");
+
+    if (isTokenExpired()) {
+        console.log("token invalid, redirecting to auth");
+        redirectToAuthCodeFlow();
+    } else {
+        const topTracks = await fetch(`https://api.spotify.com/v1/me/top/tracks?time_range=${time_range}&limit=25`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            let tracks = data.items.map((track) => {
+                return {
+                    id: track.id,
+                    name: track.name,
+                    href: track.href,
+                    uri: track.uri,
+                    artists: track.artists.map((artist) => {
+                        return {
+                            id: artist.id,
+                            name: artist.name,
+                            href: artist.href,
+                            uri: artist.uri
+                        }
+                    }),
+                    album: {
+                        id: track.album.id,
+                        name: track.album.name,
+                        href: track.album.href,
+                        uri: track.album.uri
+                    },
+                }
+            });
+
+            return tracks;
+        })
+        .catch((error) => {
+            console.error("Error fetching top tracks: ", error);
+        });
+    
+        return topTracks;
     }
 }
