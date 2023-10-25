@@ -3,7 +3,8 @@ import {
   getProfile,
   getAccessToken, 
   redirectToAuthCodeFlow, 
-  getSearchTracks } from './util/Spotify';
+  getSearchTracks, 
+  getUserPlaylists} from './util/Spotify';
 import { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
@@ -19,6 +20,7 @@ return (
           <Route path="/callback" element={<Callback />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/search" element={<Search />} />
+          <Route path="/playlists" element={<Playlists />} />
           <Route path="*" element={<NoMatch />} />
         </Route>
       </Routes>
@@ -53,8 +55,8 @@ const Sidebar = () => {
       <Link className="block" to="/profile">Profile</Link>
       {/* <Link className="block">Drafts</Link> */}
       <Link className="block" to="/search">Search</Link>
-      <Link className="block">Playlists</Link>
-      <Link className="block">Top Songs</Link>
+      <Link className="block" to="/playlists">Playlists</Link>
+      <Link className="block" to="/top-songs">Top Songs</Link>
       <Link className="block">Top Artists</Link>
       <Link className="block">Genres</Link>
       <Link className="block">Liked Songs</Link>
@@ -67,6 +69,7 @@ const Sidebar = () => {
 /**
  * Landing page component
  * Redirects to login if no access token is found
+ * @todo: UI to introduce the app
  */
 const Home = () => {
   const [profile, setProfile] = useState(null);
@@ -78,6 +81,7 @@ const Home = () => {
       navigate('/login');
     } else {
       getProfile().then((profile) => {
+        console.log(profile);
         setProfile(profile);
       });
     }
@@ -86,7 +90,7 @@ const Home = () => {
   return (
     <>
       <h2 className="m-2">Home</h2>
-      {profile && <p>{profile.display_name}</p>}
+      {profile && <p>{profile.name}</p>}
     </>    
   );
 }
@@ -128,19 +132,18 @@ const Callback = () => {
 }
 
 const Profile = () => {
-  const [profile, setProfile] = useState(null);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
-    getProfile().then((profile) => {
-      setProfile(profile);
-    }).catch((error) => {
-      throw new Error("Error fetching profile: ", error);
+    getProfile().then((user) => {
+      setUser(user);
     })
   }, []);
+
   return (
     <>
       <h1>Profile</h1>
-      <h3>{profile && profile.display_name}</h3>
+      <h3>{user && user.name}</h3>
     </>
   );
 };
@@ -199,6 +202,37 @@ const Search = () => {
         })}
       </section>
     </>
+  );
+}
+
+const Playlists = () => {
+  const [playlists, setPlaylists] = useState(null);
+
+  useEffect(() => {
+    getUserPlaylists().then((playlists) => {
+      setPlaylists(playlists);
+    });
+  }, []);
+
+  return (
+    <>
+      <h1>Playlists</h1>
+      {playlists && playlists.items.map((playlist) => {
+        return (
+          <dl key={playlist.id} className="block">
+            <dt className="inline mx-1">{playlist.name}</dt>
+            <dd className="inline mx-1">{playlist.tracks.total} tracks</dd>
+            <dd className="inline mx-1">{playlist.description}</dd>
+          </dl>
+        );
+      })}
+    </>
+  );
+}
+
+const TopSongs = () => {
+  return (
+    <h1>Top Songs</h1>
   );
 }
 
