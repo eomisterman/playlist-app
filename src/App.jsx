@@ -4,7 +4,8 @@ import {
   getAccessToken, 
   redirectToAuthCodeFlow, 
   getSearchTracks, 
-  getUserPlaylists} from './util/Spotify';
+  getUserPlaylists,
+  getUserTopTracks} from './util/Spotify';
 import { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
@@ -21,6 +22,7 @@ return (
           <Route path="/profile" element={<Profile />} />
           <Route path="/search" element={<Search />} />
           <Route path="/playlists" element={<Playlists />} />
+          <Route path="/top-songs" element={<TopSongs />} />
           <Route path="*" element={<NoMatch />} />
         </Route>
       </Routes>
@@ -231,8 +233,26 @@ const Playlists = () => {
 }
 
 const TopSongs = () => {
+  const [topTracks, setTopTracks] = useState(null);
+
+  useEffect(() => {
+    getUserTopTracks("long_term").then((topTracks) => {
+      setTopTracks(topTracks);
+    });
+  }, []);
+
   return (
-    <h1>Top Songs</h1>
+    <>
+      <h1>Top Songs</h1>
+      {topTracks && topTracks.map((track) => {
+        return (
+          <dl key={track.id} className="block">
+            <dt className="inline mx-1">{track.name}</dt>
+            <dd className="inline mx-1">{track.artists[0].name}</dd>
+          </dl>
+        );
+      })}
+    </>
   );
 }
 
