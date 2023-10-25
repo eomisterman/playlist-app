@@ -281,3 +281,43 @@ export async function getUserTopTracks(time_range) {
         return topTracks;
     }
 }
+
+/**
+ * GET - User's Top Artists
+ * @param {String} time_range Time range of top artists
+ * @returns {Promise} Top artists
+ */
+export async function getUserTopArtists(time_range) {
+    const token = localStorage.getItem("access_token");
+
+    if (isTokenExpired()) {
+        console.log("token invalid, redirecting to auth");
+        redirectToAuthCodeFlow();
+    } else {
+        const topArtists = await fetch(`https://api.spotify.com/v1/me/top/artists?time_range=${time_range}&limit=25`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            let artists = data.items.map((artist) => {
+                return {
+                    id: artist.id,
+                    name: artist.name,
+                    href: artist.href,
+                    uri: artist.uri,
+                    genres: artist.genres,
+                    images: artist.images,
+                }
+            });
+
+            return artists;
+        })
+        .catch((error) => {
+            console.error("Error fetching top artists: ", error);
+        });
+    
+        return topArtists;
+    }
+}
