@@ -1,36 +1,58 @@
-import { Link, Routes, Route, useNavigate } from 'react-router-dom';
-import { fetchProfile, getAccessToken, redirectToAuthCodeFlow } from './util/Spotify';
+import { Link, Routes, Route, Outlet, useNavigate } from 'react-router-dom';
+import { 
+  getProfile,
+  getAccessToken, 
+  redirectToAuthCodeFlow, 
+  getSearchTracks } from './util/Spotify';
 import { useEffect, useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 
 const App = () => {
 return (
-    <section className='flex'>
+    <section id="app" className='flex m-8'>
       <Sidebar />
       <Routes>
-        <Route index path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/callback" element={<Callback />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="*" element={<NoMatch />} />
+        <Route element={<Layout />}>
+          <Route index path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/callback" element={<Callback />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/search" element={<Search />} />
+          <Route path="*" element={<NoMatch />} />
+        </Route>
       </Routes>
     </section>
   );
 }
 
-/*
- *
+/**
+ * Layout component
+ * Wraps all other components
+ **/
+const Layout = () => {
+  return (
+    <section id="layout" className="basis-auto p-2">
+      <h1 className="mb-8">Layout Wrapper</h1>
+      <main>
+        <Outlet />
+      </main>
+    </section>
+  );
+}
+
+/**
  * Sidebar navigation
  * Turn into hamburger menu when screen size shrinks
- * 
- */
+ **/
 const Sidebar = () => {
   return (
-    <section id="sidebar" className="basis-48 block">
-      <h1>Playlist App</h1>
+    <section id="sidebar" className="basis-48 block p-2">
+      <h1 className="mb-8">Sidebar</h1>
       <Link className="block" to="/">Home</Link>
       <Link className="block" to="/profile">Profile</Link>
       {/* <Link className="block">Drafts</Link> */}
-      <Link className="block">Search</Link>
+      <Link className="block" to="/search">Search</Link>
       <Link className="block">Playlists</Link>
       <Link className="block">Top Songs</Link>
       <Link className="block">Top Artists</Link>
@@ -42,6 +64,10 @@ const Sidebar = () => {
   );
 }
 
+/**
+ * Landing page component
+ * Redirects to login if no access token is found
+ */
 const Home = () => {
   const [profile, setProfile] = useState(null);
   const navigate = useNavigate();
@@ -51,7 +77,7 @@ const Home = () => {
       console.log('No token, redirecting to login');
       navigate('/login');
     } else {
-      fetchProfile().then((profile) => {
+      getProfile().then((profile) => {
         setProfile(profile);
       });
     }
@@ -105,7 +131,7 @@ const Profile = () => {
   const [profile, setProfile] = useState(null);
 
   useEffect(() => {
-    fetchProfile().then((profile) => {
+    getProfile().then((profile) => {
       setProfile(profile);
     }).catch((error) => {
       throw new Error("Error fetching profile: ", error);
@@ -118,6 +144,63 @@ const Profile = () => {
     </>
   );
 };
+
+const Search = () => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [searchResults, setSearchResults] = useState(null);
+
+  useEffect(() => {
+    console.log("searchResults", searchResults);
+  }, [searchResults]);
+
+  const handleUpdateSearchTerm = (event) => {
+    setSearchTerm(event.target.value);
+  }
+
+  const handleSearch = () => {
+    getSearchTracks(searchTerm).then((results) => {
+      setSearchResults(results);
+    }).catch((error) => {
+      throw new Error("Error fetching search results: ", error);
+    });
+  }
+
+  const buttonIcon = <FontAwesomeIcon icon={faMagnifyingGlass} />
+
+  return (
+    <>
+      <h1 className="block">Search Component</h1>
+      <label htmlFor="search" className="block">Search</label>
+      <input id="search" 
+        className="inline-block" 
+        type="text" 
+        size="15" 
+        placeholder="Search for music..." 
+        onChange={handleUpdateSearchTerm} />
+      <button 
+        className="inline-block" 
+        onClick={handleSearch} >
+          {buttonIcon}
+      </button>
+      <section id="search-results" className="inline">
+        <h2>Search Results</h2>
+        {searchResults && searchResults.map((result) => {
+          return (
+            <dl key={result.id} className="block">
+              <dt className="inline mx-1">{result.name}</dt>
+              <span>-</span>
+              {result.artists.map((artists) => {
+                return (
+                  <dd key={artists.id} className="inline mx-1">{artists.name}</dd>
+                );
+              })}
+            </dl>
+          );
+        })}
+      </section>
+    </>
+  );
+}
 
 const NoMatch = () => {
   return (
