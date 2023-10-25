@@ -101,7 +101,14 @@ export async function getProfile() {
         })
         .then((response) => response.json())
         .then((data) => {
-            return data;
+            return {
+                id: data.id,
+                name: data.display_name,
+                href: data.href,
+                uri: data.uri,
+                email: data.email,
+                images: data.images,
+            };
         })
         .catch((error) => {
             console.error("Error fetching profile: ", error);
@@ -161,5 +168,64 @@ export async function getSearchTracks(query) {
         });
     
         return searchResults;
+    }
+}
+
+/**
+ * GET - User's Playlists
+ * @returns {Promise} Playlists
+ */
+export async function getUserPlaylists() {
+    const token = localStorage.getItem("access_token");
+
+    if (isTokenExpired()) {
+        console.log("token invalid, redirecting to auth");
+        redirectToAuthCodeFlow();
+    } else {
+        const playlists = await fetch("https://api.spotify.com/v1/me/playlists", {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            let listPlaylists = data.items.map((playlist) => {
+                return {
+                    id: playlist.id,
+                    name: playlist.name,
+                    description: playlist.description,
+                    href: playlist.href,
+                    uri: playlist.uri,
+                    images: playlist.images,
+                    owner: {
+                        id: playlist.owner.id,
+                        name: playlist.owner.display_name,
+                        href: playlist.owner.href,
+                        uri: playlist.owner.uri
+                    },
+                    tracks: {
+                        href: playlist.tracks.href,
+                        total: playlist.tracks.total
+                    }
+                }
+            });
+
+            let playlists = {
+                href: data.href,
+                items: listPlaylists,
+                limit: data.limit,
+                next: data.next,
+                offset: data.offset,
+                previous: data.previous,
+                total: data.total,
+            };
+
+            return playlists;
+        })
+        .catch((error) => {
+            console.error("Error fetching playlists: ", error);
+        });
+    
+        return playlists;
     }
 }
