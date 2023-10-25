@@ -5,7 +5,9 @@ import {
   redirectToAuthCodeFlow, 
   getSearchTracks, 
   getUserPlaylists,
-  getUserTopTracks} from './util/Spotify';
+  getUserTopTracks,
+  getUserTopArtists
+} from './util/Spotify';
 import { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
@@ -23,6 +25,7 @@ return (
           <Route path="/search" element={<Search />} />
           <Route path="/playlists" element={<Playlists />} />
           <Route path="/top-songs" element={<TopSongs />} />
+          <Route path="/top-artists" element={<TopArtists />} />
           <Route path="*" element={<NoMatch />} />
         </Route>
       </Routes>
@@ -59,7 +62,7 @@ const Sidebar = () => {
       <Link className="block" to="/search">Search</Link>
       <Link className="block" to="/playlists">Playlists</Link>
       <Link className="block" to="/top-songs">Top Songs</Link>
-      <Link className="block">Top Artists</Link>
+      <Link className="block" to="/top-artists">Top Artists</Link>
       <Link className="block">Genres</Link>
       <Link className="block">Liked Songs</Link>
       {/* <h3>Hover (Radio)</h3>
@@ -249,6 +252,33 @@ const TopSongs = () => {
           <dl key={track.id} className="block">
             <dt className="inline mx-1">{track.name}</dt>
             <dd className="inline mx-1">{track.artists[0].name}</dd>
+          </dl>
+        );
+      })}
+    </>
+  );
+}
+
+const TopArtists = () => {
+  const [topArtists, setTopArtists] = useState(null);
+
+  useEffect(() => {
+    getUserTopArtists("long_term").then((topArtists) => {
+      setTopArtists(topArtists);
+    });
+  }, []);
+  return (
+    <>
+      <h1>Top Artists</h1>
+      {topArtists && topArtists.map((artist) => {
+        return (
+          <dl key={artist.id} className="block">
+            <dt className="inline mx-1">{artist.name}</dt>
+            {artist.genres.length > 0 && artist.genres.map((genre) => {
+              return (
+                <dd key={genre} className="inline mx-1">{genre}</dd>
+              );
+            })}
           </dl>
         );
       })}
