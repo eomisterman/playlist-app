@@ -349,3 +349,64 @@ export async function getGenreSeeds() {
         return genreSeeds;
     }
 }
+
+/**
+ * GET - User's Liked Songs
+ * @returns {Promise} Liked songs
+ */
+export async function getUsersLikedSongs() {
+    const token = localStorage.getItem("access_token");
+
+    if (isTokenExpired()) {
+        console.log("token invalid, redirecting to auth");
+        redirectToAuthCodeFlow();
+    } else {
+        const likedSongs = await fetch("https://api.spotify.com/v1/me/tracks?limit=50", {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            let listTracks = data.items.map((track) => {
+                return {
+                    id: track.track.id,
+                    name: track.track.name,
+                    href: track.track.href,
+                    uri: track.track.uri,
+                    artists: track.track.artists.map((artist) => {
+                        return {
+                            id: artist.id,
+                            name: artist.name,
+                            href: artist.href,
+                            uri: artist.uri
+                        }
+                    }),
+                    album: {
+                        id: track.track.album.id,
+                        name: track.track.album.name,
+                        href: track.track.album.href,
+                        uri: track.track.album.uri
+                    },
+                }
+            });
+
+            let tracks = {
+                href: data.href,
+                items: listTracks,
+                limit: data.limit,
+                next: data.next,
+                offset: data.offset,
+                previous: data.previous,
+                total: data.total,
+            };
+
+            return tracks;
+        })
+        .catch((error) => {
+            console.error("Error fetching liked songs: ", error);
+        });
+    
+        return likedSongs;
+    }
+}
