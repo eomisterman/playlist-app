@@ -321,3 +321,31 @@ export async function getUserTopArtists(time_range) {
         return topArtists;
     }
 }
+
+/**
+ * GET - Available Genre Seeds
+ * @returns {Promise} Genre seeds array
+ */
+export async function getGenreSeeds() {
+    const token = localStorage.getItem("access_token");
+
+    if (isTokenExpired()) {
+        console.log("token invalid, redirecting to auth");
+        redirectToAuthCodeFlow();
+    } else {
+        const genreSeeds = await fetch("https://api.spotify.com/v1/recommendations/available-genre-seeds", {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            return data.genres;
+        })
+        .catch((error) => {
+            console.error("Error fetching genre seeds: ", error);
+        });
+    
+        return genreSeeds;
+    }
+}

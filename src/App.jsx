@@ -6,7 +6,8 @@ import {
   getSearchTracks, 
   getUserPlaylists,
   getUserTopTracks,
-  getUserTopArtists
+  getUserTopArtists,
+  getGenreSeeds
 } from './util/Spotify';
 import { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -26,6 +27,7 @@ return (
           <Route path="/playlists" element={<Playlists />} />
           <Route path="/top-songs" element={<TopSongs />} />
           <Route path="/top-artists" element={<TopArtists />} />
+          <Route path="/genres" element={<Genres />} />
           <Route path="*" element={<NoMatch />} />
         </Route>
       </Routes>
@@ -63,7 +65,7 @@ const Sidebar = () => {
       <Link className="block" to="/playlists">Playlists</Link>
       <Link className="block" to="/top-songs">Top Songs</Link>
       <Link className="block" to="/top-artists">Top Artists</Link>
-      <Link className="block">Genres</Link>
+      <Link className="block" to="/genres">Genres</Link>
       <Link className="block">Liked Songs</Link>
       {/* <h3>Hover (Radio)</h3>
       <button>Log out</button> */}
@@ -279,6 +281,29 @@ const TopArtists = () => {
                 <dd key={genre} className="inline mx-1">{genre}</dd>
               );
             })}
+          </dl>
+        );
+      })}
+    </>
+  );
+}
+
+const Genres = () => {
+  const [genres, setGenres] = useState(null);
+
+  useEffect(() => {
+    getGenreSeeds().then((genres) => {
+      setGenres(genres);
+    });
+  }, []);
+
+  return (
+    <>
+      <h1>Genres</h1>
+      {genres && genres.map((genre) => {
+        return (
+          <dl key={genre} className="block">
+            <dt className="inline mx-1">{genre}</dt>
           </dl>
         );
       })}
