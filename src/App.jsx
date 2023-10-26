@@ -11,6 +11,7 @@ import {
   getUsersLikedSongs
 } from './util/Spotify';
 import { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 
@@ -198,15 +199,7 @@ const Search = () => {
         <h2>Search Results</h2>
         {searchResults && searchResults.map((result) => {
           return (
-            <dl key={result.id} className="block">
-              <dt className="inline mx-1">{result.name}</dt>
-              <span>-</span>
-              {result.artists.map((artists) => {
-                return (
-                  <dd key={artists.id} className="inline mx-1">{artists.name}</dd>
-                );
-              })}
-            </dl>
+            <Card key={result.id} type="track" name={result.name} detailList={result.artists} />
           );
         })}
       </section>
@@ -228,11 +221,7 @@ const Playlists = () => {
       <h1>Playlists</h1>
       {playlists && playlists.items.map((playlist) => {
         return (
-          <dl key={playlist.id} className="block">
-            <dt className="inline mx-1">{playlist.name}</dt>
-            <dd className="inline mx-1">{playlist.tracks.total} tracks</dd>
-            <dd className="inline mx-1">{playlist.description}</dd>
-          </dl>
+          <Card key={playlist.id} type="playlist" name={playlist.name} detailList={[playlist.tracks.total, playlist.description]} />
         );
       })}
     </>
@@ -253,14 +242,7 @@ const TopSongs = () => {
       <h1>Top Songs</h1>
       {topTracks && topTracks.map((track) => {
         return (
-          <dl key={track.id} className="block">
-            <dt className="inline mx-1">{track.name}</dt>
-            {track.artists.map((artist) => {
-              return (
-                <dd key={artist.id} className="inline mx-1">{artist.name}</dd>
-              );
-            })}
-          </dl>
+          <Card key={track.id} type="track" name={track.name} detailList={track.artists} />
         );
       })}
     </>
@@ -280,18 +262,34 @@ const TopArtists = () => {
       <h1>Top Artists</h1>
       {topArtists && topArtists.map((artist) => {
         return (
-          <dl key={artist.id} className="block">
-            <dt className="inline mx-1">{artist.name}</dt>
-            {artist.genres.length > 0 && artist.genres.map((genre) => {
-              return (
-                <dd key={genre} className="inline mx-1">{genre}</dd>
-              );
-            })}
-          </dl>
+          <Card key={artist.id} type="artist" name={artist.name} detailList={artist.genres} />
         );
       })}
     </>
   );
+}
+
+const Card = ({ type, name, detailList }) => {
+  return (
+    <dl className="block">
+      <dt className="inline mx-1">{name}</dt>
+      {detailList.map((detail) => {
+        return (
+          type == "track" ? 
+            <dd key={detail.id} className="inline mx-1">{detail.name}</dd> :
+            <dd key={detail} className="inline mx-1">{detail}</dd>
+        );
+      })}
+    </dl>
+  
+  );
+}
+
+Card.propTypes = {
+  id: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  detailList: PropTypes.array.isRequired,
+  type: PropTypes.string.isRequired
 }
 
 const Genres = () => {
@@ -330,14 +328,7 @@ const LikedSongs = () => {
     <>
       {likedSongs && likedSongs.items.map((song) => {
         return (
-          <dl key={song.id} className="block">
-            <dt className="inline mx-1">{song.name}</dt>
-            {song.artists.map((artist) => {
-              return (
-                <dd key={artist.id} className="inline mx-1">{artist.name}</dd>
-              );
-            })}
-          </dl>
+          <Card key={song.id} type="track" name={song.name} detailList={song.artists} />
         );
       })}
     </>
