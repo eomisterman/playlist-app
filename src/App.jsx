@@ -7,7 +7,8 @@ import {
   getUserPlaylists,
   getUserTopTracks,
   getUserTopArtists,
-  getGenreSeeds
+  getGenreSeeds,
+  getUsersLikedSongs
 } from './util/Spotify';
 import { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -28,6 +29,7 @@ return (
           <Route path="/top-songs" element={<TopSongs />} />
           <Route path="/top-artists" element={<TopArtists />} />
           <Route path="/genres" element={<Genres />} />
+          <Route path="/liked-songs" element={<LikedSongs />} />
           <Route path="*" element={<NoMatch />} />
         </Route>
       </Routes>
@@ -66,7 +68,7 @@ const Sidebar = () => {
       <Link className="block" to="/top-songs">Top Songs</Link>
       <Link className="block" to="/top-artists">Top Artists</Link>
       <Link className="block" to="/genres">Genres</Link>
-      <Link className="block">Liked Songs</Link>
+      <Link className="block" to="/liked-songs">Liked Songs</Link>
       {/* <h3>Hover (Radio)</h3>
       <button>Log out</button> */}
     </section>
@@ -253,7 +255,11 @@ const TopSongs = () => {
         return (
           <dl key={track.id} className="block">
             <dt className="inline mx-1">{track.name}</dt>
-            <dd className="inline mx-1">{track.artists[0].name}</dd>
+            {track.artists.map((artist) => {
+              return (
+                <dd key={artist.id} className="inline mx-1">{artist.name}</dd>
+              );
+            })}
           </dl>
         );
       })}
@@ -304,6 +310,33 @@ const Genres = () => {
         return (
           <dl key={genre} className="block">
             <dt className="inline mx-1">{genre}</dt>
+          </dl>
+        );
+      })}
+    </>
+  );
+}
+
+const LikedSongs = () => {
+  const [likedSongs, setLikedSongs] = useState(null);
+
+  useEffect(() => {
+    getUsersLikedSongs().then((likedSongs) => {
+      setLikedSongs(likedSongs);
+    });
+  }, []);
+
+  return (
+    <>
+      {likedSongs && likedSongs.items.map((song) => {
+        return (
+          <dl key={song.id} className="block">
+            <dt className="inline mx-1">{song.name}</dt>
+            {song.artists.map((artist) => {
+              return (
+                <dd key={artist.id} className="inline mx-1">{artist.name}</dd>
+              );
+            })}
           </dl>
         );
       })}
