@@ -238,14 +238,13 @@ const TopSongs = () => {
   }, []);
 
   return (
-    <>
-      <h1>Top Songs</h1>
+    <main className="">
       {topTracks && topTracks.map((track) => {
         return (
           <Card key={track.id} type="track" name={track.name} detailList={track.artists} />
         );
       })}
-    </>
+    </main>
   );
 }
 
@@ -271,13 +270,13 @@ const TopArtists = () => {
 
 const Card = ({ type, name, detailList }) => {
   return (
-    <dl className="block">
-      <dt className="inline mx-1">{name}</dt>
+    <dl className="my-4">
+      <dt className="block hyphens-auto">{name}</dt>
       {detailList.map((detail) => {
         return (
           type == "track" ? 
-            <dd key={detail.id} className="inline mx-1">{detail.name}</dd> :
-            <dd key={detail} className="inline mx-1">{detail}</dd>
+            <dd key={detail.id} className="inline hyphens-auto mr-2">{detail.name}</dd> :
+            <dd key={detail} className="inline hyphens-auto mr-2">{detail}</dd>
         );
       })}
     </dl>
@@ -325,13 +324,13 @@ const LikedSongs = () => {
   }, []);
 
   return (
-    <>
+    <main className="grid grid-cols-2 gap-2">
       {likedSongs && likedSongs.items.map((song) => {
         return (
           <Card key={song.id} type="track" name={song.name} detailList={song.artists} />
         );
       })}
-    </>
+    </main>
   );
 }
 
