@@ -144,19 +144,22 @@ export async function getSearchTracks(query) {
                     name: track.name,
                     href: track.href,
                     uri: track.uri,
+                    type: track.type,
                     artists: track.artists.map((artist) => {
                         return {
                             id: artist.id,
                             name: artist.name,
                             href: artist.href,
-                            uri: artist.uri
+                            uri: artist.uri,
+                            type: artist.type
                         }
                     }),
                     album: {
                         id: track.album.id,
                         name: track.album.name,
                         href: track.album.href,
-                        uri: track.album.uri
+                        uri: track.album.uri,
+                        type: track.album.type
                     },
                 }
             });
@@ -231,6 +234,71 @@ export async function getUserPlaylists() {
 }
 
 /**
+ * GET - Playlist Tracks
+ * @param {String} playlist_id Playlist ID
+ * @returns {Promise} Playlist tracks
+ */
+export async function getPlaylistTracks(playlist_id) {
+    const token = localStorage.getItem("access_token");
+
+    if (isTokenExpired()) {
+        console.log("token invalid, redirecting to auth");
+        redirectToAuthCodeFlow();
+    } else {
+        const playlistTracks = await fetch(`https://api.spotify.com/v1/playlists/${playlist_id}/tracks?limit=20`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            let listTracks = data.items.map((track) => {
+                return {
+                    id: track.track.id,
+                    name: track.track.name,
+                    href: track.track.href,
+                    uri: track.track.uri,
+                    type: track.track.type,
+                    artists: track.track.artists.map((artist) => {
+                        return {
+                            id: artist.id,
+                            name: artist.name,
+                            href: artist.href,
+                            uri: artist.uri,
+                            type: artist.type
+                        }
+                    }),
+                    album: {
+                        id: track.track.album.id,
+                        name: track.track.album.name,
+                        href: track.track.album.href,
+                        uri: track.track.album.uri,
+                        type: track.track.album.type
+                    },
+                }
+            });
+
+            let tracks = {
+                href: data.href,
+                items: listTracks,
+                limit: data.limit,
+                next: data.next,
+                offset: data.offset,
+                previous: data.previous,
+                total: data.total,
+            };
+
+            return tracks;
+        })
+        .catch((error) => {
+            console.error("Error fetching playlist tracks: ", error);
+        });
+    
+        return playlistTracks;
+    }
+}
+
+/**
  * GET - User's Top Tracks
  * @param {String} time_range Time range of top tracks
  * @returns {Promise} Top tracks
@@ -255,19 +323,22 @@ export async function getUserTopTracks(time_range) {
                     name: track.name,
                     href: track.href,
                     uri: track.uri,
+                    type: track.type,
                     artists: track.artists.map((artist) => {
                         return {
                             id: artist.id,
                             name: artist.name,
                             href: artist.href,
-                            uri: artist.uri
+                            uri: artist.uri,
+                            type: artist.type
                         }
                     }),
                     album: {
                         id: track.album.id,
                         name: track.album.name,
                         href: track.album.href,
-                        uri: track.album.uri
+                        uri: track.album.uri,
+                        type: track.album.type
                     },
                 }
             });
@@ -309,6 +380,7 @@ export async function getUserTopArtists(time_range) {
                     uri: artist.uri,
                     genres: artist.genres,
                     images: artist.images,
+                    type: artist.type,
                 }
             });
 
@@ -374,19 +446,22 @@ export async function getUsersLikedSongs() {
                     name: track.track.name,
                     href: track.track.href,
                     uri: track.track.uri,
+                    type: track.track.type,
                     artists: track.track.artists.map((artist) => {
                         return {
                             id: artist.id,
                             name: artist.name,
                             href: artist.href,
-                            uri: artist.uri
+                            uri: artist.uri,
+                            type: artist.type
                         }
                     }),
                     album: {
                         id: track.track.album.id,
                         name: track.track.album.name,
                         href: track.track.album.href,
-                        uri: track.track.album.uri
+                        uri: track.track.album.uri,
+                        type: track.track.album.type
                     },
                 }
             });
@@ -408,5 +483,113 @@ export async function getUsersLikedSongs() {
         });
     
         return likedSongs;
+    }
+}
+
+/**
+ * GET - Track recommendations from song ID
+ * @param {String} seed Track ID
+ * @returns {Promise} Track recommendations
+ */
+export async function getTrackRecFromTrack(trackId) {
+    if (isTokenExpired()) {
+        console.log("token invalid, redirecting to auth");
+        redirectToAuthCodeFlow();
+    } else {
+        const token = localStorage.getItem("access_token");
+        let trackRecs = await fetch(`https://api.spotify.com/v1/recommendations?seed_tracks=${trackId}&limit=5`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            let tracks = data.tracks.map((track) => {
+                return {
+                    id: track.id,
+                    name: track.name,
+                    href: track.href,
+                    uri: track.uri,
+                    type: track.type,
+                    artists: track.artists.map((artist) => {
+                        return {
+                            id: artist.id,
+                            name: artist.name,
+                            href: artist.href,
+                            uri: artist.uri,
+                            type: artist.type
+                        }
+                    }),
+                    album: {
+                        id: track.album.id,
+                        name: track.album.name,
+                        href: track.album.href,
+                        uri: track.album.uri,
+                        type: track.album.type
+                    },
+                }
+            });
+
+            return tracks;
+        })
+        .catch((error) => {
+            console.error("Error fetching track recommendations: ", error);
+        });
+    
+        return trackRecs;
+    }
+}
+
+/**
+ * GET - Track recommendations from artist ID
+ * @param {String} seed Artist ID
+ * @returns {Promise} Track recommendations
+ */
+export async function getTrackRecFromArtist(artistId) {
+    if (isTokenExpired()) {
+        console.log("token invalid, redirecting to auth");
+        redirectToAuthCodeFlow();
+    } else {
+        const token = localStorage.getItem("access_token");
+        let trackRecs = await fetch(`https://api.spotify.com/v1/recommendations?seed_artists=${artistId}&limit=5`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            let tracks = data.tracks.map((track) => {
+                return {
+                    id: track.id,
+                    name: track.name,
+                    href: track.href,
+                    uri: track.uri,
+                    type: track.type,
+                    artists: track.artists.map((artist) => {
+                        return {
+                            id: artist.id,
+                            name: artist.name,
+                            href: artist.href,
+                            uri: artist.uri,
+                            type: artist.type
+                        }
+                    }),
+                    album: {
+                        id: track.album.id,
+                        name: track.album.name,
+                        href: track.album.href,
+                        uri: track.album.uri,
+                        type: track.album.type
+                    },
+                }
+            });
+
+            return tracks;
+        })
+        .catch((error) => {
+            console.error("Error fetching track recommendations: ", error);
+        });
+    
+        return trackRecs;
     }
 }

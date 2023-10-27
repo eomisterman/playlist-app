@@ -8,7 +8,9 @@ import {
   getUserTopTracks,
   getUserTopArtists,
   getGenreSeeds,
-  getUsersLikedSongs
+  getUsersLikedSongs,
+  getPlaylistTracks,
+  getTrackRecFromTrack
 } from './util/Spotify';
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
@@ -207,8 +209,15 @@ const Search = () => {
   );
 }
 
+/**
+ * @TODO
+ * onClick handler for playlist cards resulted in 429 error
+ * Need to investigate why repeat requests are happening for all playlists
+ * after clicking one playlist card.
+ */
 const Playlists = () => {
   const [playlists, setPlaylists] = useState(null);
+  const [selectedPlaylistTracks, setSelectedPlaylistTracks] = useState(null);
 
   useEffect(() => {
     getUserPlaylists().then((playlists) => {
@@ -216,12 +225,33 @@ const Playlists = () => {
     });
   }, []);
 
+  const handleSelectPlaylist = (playlistId) => {
+    getPlaylistTracks(playlistId).then((tracks) => {
+      setSelectedPlaylistTracks(tracks);
+    });
+  }
+
   return (
     <>
       <h1>Playlists</h1>
       {playlists && playlists.items.map((playlist) => {
         return (
-          <Card key={playlist.id} type="playlist" name={playlist.name} detailList={[playlist.tracks.total, playlist.description]} />
+          <Card key={playlist.id} 
+            id={playlist.id}
+            type="playlist"
+            name={playlist.name}
+            detailList={[playlist.tracks.total, playlist.description]}
+            handleClick={() => {handleSelectPlaylist(playlist.id)}} />
+        );
+      })}
+      {selectedPlaylistTracks && selectedPlaylistTracks.items.map((track) => {
+        return (
+          <Card 
+            key={track.id}
+            id={track.id}
+            type={track.type}
+            name={track.name}
+            detailList={track.artists} />
         );
       })}
     </>
@@ -230,6 +260,7 @@ const Playlists = () => {
 
 const TopSongs = () => {
   const [topTracks, setTopTracks] = useState(null);
+  const [generatedRecs, setGeneratedRecs] = useState([]);
 
   useEffect(() => {
     getUserTopTracks("long_term").then((topTracks) => {
@@ -237,12 +268,25 @@ const TopSongs = () => {
     });
   }, []);
 
+  const handleGenerateRecs = (trackId) => {
+    getTrackRecFromTrack(trackId).then((recs) => {
+      setGeneratedRecs([...generatedRecs, recs]);
+    });
+  }
+
   return (
     <main className="">
       {topTracks && topTracks.map((track) => {
         return (
-          <Card key={track.id} type="track" name={track.name} detailList={track.artists} />
+          <Card key={track.id} id={track.id} type="track" name={track.name} detailList={track.artists} handleClick={() => {handleGenerateRecs(track.id)}} />
         );
+      })}
+      {generatedRecs && generatedRecs.map((recs) => {
+        recs.map((rec) => {
+          return (
+            <Card key={rec.id} type={rec.type} name={rec.name} detailList={rec.artists} />
+          );
+        })
       })}
     </main>
   );
@@ -250,27 +294,55 @@ const TopSongs = () => {
 
 const TopArtists = () => {
   const [topArtists, setTopArtists] = useState(null);
+  const [generatedRecs, setGeneratedRecs] = useState([]);
 
   useEffect(() => {
     getUserTopArtists("long_term").then((topArtists) => {
       setTopArtists(topArtists);
     });
   }, []);
+
+  const handleGenerateRecs = (artistId) => {
+    console.log("Handling generate recs for artist: ", artistId);
+    getTrackRecFromTrack(artistId).then((recs) => {
+      if (recs) {
+        setGeneratedRecs([...generatedRecs, recs]);
+      }
+    });
+  }
+
   return (
     <>
       <h1>Top Artists</h1>
       {topArtists && topArtists.map((artist) => {
         return (
-          <Card key={artist.id} type="artist" name={artist.name} detailList={artist.genres} />
+          <Card 
+            key={artist.id} 
+            id={artist.id} 
+            type={artist.type} 
+            name={artist.name} 
+            detailList={artist.genres} 
+            handleClick={() => {handleGenerateRecs(artist.id)}} />
         );
+      })}
+      {generatedRecs && generatedRecs.map((recs) => {
+        recs.map((rec) => {
+          return (
+            <Card
+              key={rec.id} 
+              type={rec.type} 
+              name={rec.name} 
+              detailList={rec.artists} />
+          );
+        })
       })}
     </>
   );
 }
 
-const Card = ({ type, name, detailList }) => {
+const Card = ({ type, name, detailList, handleClick }) => {
   return (
-    <dl className="my-4">
+    <dl className="my-4" onClick={handleClick}>
       <dt className="block hyphens-auto">{name}</dt>
       {detailList.map((detail) => {
         return (
@@ -288,7 +360,8 @@ Card.propTypes = {
   id: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   detailList: PropTypes.array.isRequired,
-  type: PropTypes.string.isRequired
+  type: PropTypes.string.isRequired,
+  handleClick: PropTypes.func
 }
 
 const Genres = () => {
