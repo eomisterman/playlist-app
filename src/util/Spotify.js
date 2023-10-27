@@ -131,7 +131,7 @@ export async function getSearchTracks(query) {
         console.log("token invalid, redirecting to auth");
         redirectToAuthCodeFlow();
     } else {
-        const searchResults = await fetch(`https://api.spotify.com/v1/search?q=${encodedQuery}&type=track`, {
+        const searchResults = await fetch(`https://api.spotify.com/v1/search?q=${encodedQuery}&type=track&limit=10`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -182,7 +182,7 @@ export async function getUserPlaylists() {
         console.log("token invalid, redirecting to auth");
         redirectToAuthCodeFlow();
     } else {
-        const playlists = await fetch("https://api.spotify.com/v1/me/playlists", {
+        const playlists = await fetch("https://api.spotify.com/v1/me/playlists?limit=8", {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -242,7 +242,7 @@ export async function getUserTopTracks(time_range) {
         console.log("token invalid, redirecting to auth");
         redirectToAuthCodeFlow();
     } else {
-        const topTracks = await fetch(`https://api.spotify.com/v1/me/top/tracks?time_range=${time_range}&limit=25`, {
+        const topTracks = await fetch(`https://api.spotify.com/v1/me/top/tracks?time_range=${time_range}&limit=10`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -294,7 +294,7 @@ export async function getUserTopArtists(time_range) {
         console.log("token invalid, redirecting to auth");
         redirectToAuthCodeFlow();
     } else {
-        const topArtists = await fetch(`https://api.spotify.com/v1/me/top/artists?time_range=${time_range}&limit=25`, {
+        const topArtists = await fetch(`https://api.spotify.com/v1/me/top/artists?time_range=${time_range}&limit=10`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -361,7 +361,7 @@ export async function getUsersLikedSongs() {
         console.log("token invalid, redirecting to auth");
         redirectToAuthCodeFlow();
     } else {
-        const likedSongs = await fetch("https://api.spotify.com/v1/me/tracks?limit=50", {
+        const likedSongs = await fetch("https://api.spotify.com/v1/me/tracks?limit=20", {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
