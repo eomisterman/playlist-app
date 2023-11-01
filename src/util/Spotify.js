@@ -139,7 +139,7 @@ export async function getSearchTracks(query) {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      },
+      }
     )
       .then((response) => response.json())
       .then((data) => {
@@ -196,7 +196,7 @@ export async function getUserPlaylists() {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      },
+      }
     )
       .then((response) => response.json())
       .then((data) => {
@@ -259,7 +259,7 @@ export async function getPlaylistTracks(playlist_id) {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      },
+      }
     )
       .then((response) => response.json())
       .then((data) => {
@@ -327,7 +327,7 @@ export async function getUserTopTracks(time_range) {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      },
+      }
     )
       .then((response) => response.json())
       .then((data) => {
@@ -353,6 +353,7 @@ export async function getUserTopTracks(time_range) {
               href: track.album.href,
               uri: track.album.uri,
               type: track.album.type,
+              images: track.album.images,
             },
           };
         });
@@ -385,7 +386,7 @@ export async function getUserTopArtists(time_range) {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      },
+      }
     )
       .then((response) => response.json())
       .then((data) => {
@@ -428,7 +429,7 @@ export async function getGenreSeeds() {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      },
+      }
     )
       .then((response) => response.json())
       .then((data) => {
@@ -459,7 +460,7 @@ export async function getUsersLikedSongs() {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      },
+      }
     )
       .then((response) => response.json())
       .then((data) => {
@@ -526,7 +527,7 @@ export async function getTrackRecFromTrack(trackId) {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      },
+      }
     )
       .then((response) => response.json())
       .then((data) => {
@@ -583,7 +584,7 @@ export async function getTrackRecFromArtist(artistId) {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      },
+      }
     )
       .then((response) => response.json())
       .then((data) => {

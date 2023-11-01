@@ -2,7 +2,6 @@ import { Link, Routes, Route, Outlet, useNavigate } from "react-router-dom";
 import {
   getProfile,
   getAccessToken,
-  redirectToAuthCodeFlow,
   getSearchTracks,
   getUserPlaylists,
   getUserTopTracks,
@@ -16,16 +15,26 @@ import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import {
+  Flex,
+  Container,
+  Box,
+  Card,
+  CardBody,
+  Heading,
+  Text,
+} from "@chakra-ui/react";
+import { Login } from "./Login";
 
 const App = () => {
   return (
     <section id="app">
-      <Sidebar />
+      {/* <Sidebar /> */}
       <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/callback" element={<Callback />} />
         <Route element={<Layout />}>
           <Route index path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/callback" element={<Callback />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/search" element={<Search />} />
           <Route path="/playlists" element={<Playlists />} />
@@ -46,12 +55,10 @@ const App = () => {
  **/
 const Layout = () => {
   return (
-    <section id="layout">
-      <h1>Layout Wrapper</h1>
-      <main>
-        <Outlet />
-      </main>
-    </section>
+    <Flex>
+      <Sidebar />
+      <Outlet />
+    </Flex>
   );
 };
 
@@ -61,20 +68,35 @@ const Layout = () => {
  **/
 const Sidebar = () => {
   return (
-    <section id="sidebar">
-      <h1>Sidebar</h1>
-      <Link to="/">Home</Link>
-      <Link to="/profile">Profile</Link>
+    <Flex h={"95vh"} flexDir={"column"} w={[24, 36, 48]} m={[6, 8, 10]} pt={8}>
+      <Box mt={12} mb={8}>
+        <Link to="/">Home</Link>
+      </Box>
+      <Box mb={8}>
+        <Link to="/profile">Profile</Link>
+      </Box>
       {/* <Link>Drafts</Link> */}
-      <Link to="/search">Search</Link>
-      <Link to="/playlists">Playlists</Link>
-      <Link to="/top-songs">Top Songs</Link>
-      <Link to="/top-artists">Top Artists</Link>
-      <Link to="/genres">Genres</Link>
-      <Link to="/liked-songs">Liked Songs</Link>
+      <Box mb={8}>
+        <Link to="/search">Search</Link>
+      </Box>
+      <Box mb={8}>
+        <Link to="/playlists">Playlists</Link>
+      </Box>
+      <Box mb={8}>
+        <Link to="/top-songs">Top Songs</Link>
+      </Box>
+      <Box mb={8}>
+        <Link to="/top-artists">Top Artists</Link>
+      </Box>
+      <Box mb={8}>
+        <Link to="/genres">Genres</Link>
+      </Box>
+      <Box mb={8}>
+        <Link to="/liked-songs">Liked Songs</Link>
+      </Box>
       {/* <h3>Hover (Radio)</h3>
       <button>Log out</button> */}
-    </section>
+    </Flex>
   );
 };
 
@@ -99,24 +121,7 @@ const Home = () => {
     }
   }, [navigate]);
 
-  return (
-    <>
-      <h2>Home</h2>
-      {profile && <p>{profile.name}</p>}
-    </>
-  );
-};
-
-const Login = () => {
-  const handleSpotifyLogin = () => {
-    redirectToAuthCodeFlow();
-  };
-  return (
-    <>
-      <h2>Login Component</h2>
-      <button onClick={handleSpotifyLogin}>Login With Spotify</button>
-    </>
-  );
+  return <Flex>{profile && <p>{profile.name}</p>}</Flex>;
 };
 
 const Callback = () => {
@@ -200,7 +205,7 @@ const Search = () => {
         {searchResults &&
           searchResults.map((result) => {
             return (
-              <Card
+              <MusicCard
                 key={result.id}
                 type="track"
                 name={result.name}
@@ -241,7 +246,7 @@ const Playlists = () => {
       {playlists &&
         playlists.items.map((playlist) => {
           return (
-            <Card
+            <MusicCard
               key={playlist.id}
               id={playlist.id}
               type="playlist"
@@ -256,7 +261,7 @@ const Playlists = () => {
       {selectedPlaylistTracks &&
         selectedPlaylistTracks.items.map((track) => {
           return (
-            <Card
+            <MusicCard
               key={track.id}
               id={track.id}
               type={track.type}
@@ -286,11 +291,11 @@ const TopSongs = () => {
   };
 
   return (
-    <main>
+    <Container maxW={"container.lg"} bg={"purple.100"}>
       {topTracks &&
         topTracks.map((track) => {
           return (
-            <Card
+            <MusicCard
               key={track.id}
               id={track.id}
               type="track"
@@ -306,7 +311,7 @@ const TopSongs = () => {
         generatedRecs.map((recs) => {
           recs.map((rec) => {
             return (
-              <Card
+              <MusicCard
                 key={rec.id}
                 type={rec.type}
                 name={rec.name}
@@ -315,7 +320,7 @@ const TopSongs = () => {
             );
           });
         })}
-    </main>
+    </Container>
   );
 };
 
@@ -344,7 +349,7 @@ const TopArtists = () => {
       {topArtists &&
         topArtists.map((artist) => {
           return (
-            <Card
+            <MusicCard
               key={artist.id}
               id={artist.id}
               type={artist.type}
@@ -360,7 +365,7 @@ const TopArtists = () => {
         generatedRecs.map((recs) => {
           recs.map((rec) => {
             return (
-              <Card
+              <MusicCard
                 key={rec.id}
                 type={rec.type}
                 name={rec.name}
@@ -373,28 +378,45 @@ const TopArtists = () => {
   );
 };
 
-const Card = ({ type, name, detailList, handleClick }) => {
+const MusicCard = ({ type, name, detailList, handleClick }) => {
   return (
-    <dl onClick={handleClick}>
-      <dt>{name}</dt>
-      {detailList.map((detail) => {
-        return type == "track" ? (
-          <dd key={detail.id}>{detail.name}</dd>
-        ) : (
-          <dd key={detail}>{detail}</dd>
-        );
-      })}
-    </dl>
+    <Card onClick={handleClick} my={1}>
+      <CardBody>
+        <Heading size={"sm"}>{name}</Heading>
+        {detailList.map((detail, index) => {
+          return type == "track" ? (
+            <Text key={detail.id} display={"inline"}>{`${index ? ", " : ""}${
+              detail.name
+            }`}</Text>
+          ) : (
+            <Text key={detail}>
+              `${index ? ", " : ""}${detail}`
+            </Text>
+          );
+        })}
+      </CardBody>
+    </Card>
   );
 };
 
-Card.propTypes = {
+MusicCard.propTypes = {
   id: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   detailList: PropTypes.array.isRequired,
   type: PropTypes.string.isRequired,
   handleClick: PropTypes.func,
 };
+/**
+ * 
+ *    <Header size={"sm"}>{name}</Header>
+        {detailList.map((detail) => {
+          return type == "track" ? (
+            <Text key={detail.id}>{detail.name}</Text>
+          ) : (
+            <Text key={detail}>{detail}</Text>
+          );
+        })}
+ */
 
 const Genres = () => {
   const [genres, setGenres] = useState(null);
@@ -434,7 +456,7 @@ const LikedSongs = () => {
       {likedSongs &&
         likedSongs.items.map((song) => {
           return (
-            <Card
+            <MusicCard
               key={song.id}
               type="track"
               name={song.name}
