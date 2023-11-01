@@ -8,7 +8,7 @@ import {
 } from "@chakra-ui/react";
 import { redirectToAuthCodeFlow } from "./util/Spotify";
 
-export const Login = () => {
+const Login = () => {
   const handleSpotifyLogin = () => {
     redirectToAuthCodeFlow();
   };
@@ -60,3 +60,5 @@ export const Login = () => {
     </Container>
   );
 };
+
+export default Login;
