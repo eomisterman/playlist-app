@@ -19,7 +19,7 @@ import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 
 const App = () => {
   return (
-    <section id="app" className="m-8 flex">
+    <section id="app">
       <Sidebar />
       <Routes>
         <Route element={<Layout />}>
@@ -46,8 +46,8 @@ const App = () => {
  **/
 const Layout = () => {
   return (
-    <section id="layout" className="basis-auto p-2">
-      <h1 className="mb-8">Layout Wrapper</h1>
+    <section id="layout">
+      <h1>Layout Wrapper</h1>
       <main>
         <Outlet />
       </main>
@@ -61,33 +61,17 @@ const Layout = () => {
  **/
 const Sidebar = () => {
   return (
-    <section id="sidebar" className="block basis-48 p-2">
-      <h1 className="mb-8">Sidebar</h1>
-      <Link className="block" to="/">
-        Home
-      </Link>
-      <Link className="block" to="/profile">
-        Profile
-      </Link>
-      {/* <Link className="block">Drafts</Link> */}
-      <Link className="block" to="/search">
-        Search
-      </Link>
-      <Link className="block" to="/playlists">
-        Playlists
-      </Link>
-      <Link className="block" to="/top-songs">
-        Top Songs
-      </Link>
-      <Link className="block" to="/top-artists">
-        Top Artists
-      </Link>
-      <Link className="block" to="/genres">
-        Genres
-      </Link>
-      <Link className="block" to="/liked-songs">
-        Liked Songs
-      </Link>
+    <section id="sidebar">
+      <h1>Sidebar</h1>
+      <Link to="/">Home</Link>
+      <Link to="/profile">Profile</Link>
+      {/* <Link>Drafts</Link> */}
+      <Link to="/search">Search</Link>
+      <Link to="/playlists">Playlists</Link>
+      <Link to="/top-songs">Top Songs</Link>
+      <Link to="/top-artists">Top Artists</Link>
+      <Link to="/genres">Genres</Link>
+      <Link to="/liked-songs">Liked Songs</Link>
       {/* <h3>Hover (Radio)</h3>
       <button>Log out</button> */}
     </section>
@@ -117,7 +101,7 @@ const Home = () => {
 
   return (
     <>
-      <h2 className="m-2">Home</h2>
+      <h2>Home</h2>
       {profile && <p>{profile.name}</p>}
     </>
   );
@@ -129,10 +113,8 @@ const Login = () => {
   };
   return (
     <>
-      <h2 className="m-2">Login Component</h2>
-      <button className="m-2" onClick={handleSpotifyLogin}>
-        Login With Spotify
-      </button>
+      <h2>Login Component</h2>
+      <button onClick={handleSpotifyLogin}>Login With Spotify</button>
     </>
   );
 };
@@ -203,22 +185,17 @@ const Search = () => {
 
   return (
     <>
-      <h1 className="block">Search Component</h1>
-      <label htmlFor="search" className="block">
-        Search
-      </label>
+      <h1>Search Component</h1>
+      <label htmlFor="search">Search</label>
       <input
         id="search"
-        className="inline-block"
         type="text"
         size="15"
         placeholder="Search for music..."
         onChange={handleUpdateSearchTerm}
       />
-      <button className="inline-block" onClick={handleSearch}>
-        {buttonIcon}
-      </button>
-      <section id="search-results" className="inline">
+      <button onClick={handleSearch}>{buttonIcon}</button>
+      <section id="search-results">
         <h2>Search Results</h2>
         {searchResults &&
           searchResults.map((result) => {
@@ -309,7 +286,7 @@ const TopSongs = () => {
   };
 
   return (
-    <main className="">
+    <main>
       {topTracks &&
         topTracks.map((track) => {
           return (
@@ -398,17 +375,13 @@ const TopArtists = () => {
 
 const Card = ({ type, name, detailList, handleClick }) => {
   return (
-    <dl className="my-4" onClick={handleClick}>
-      <dt className="block hyphens-auto">{name}</dt>
+    <dl onClick={handleClick}>
+      <dt>{name}</dt>
       {detailList.map((detail) => {
         return type == "track" ? (
-          <dd key={detail.id} className="mr-2 inline hyphens-auto">
-            {detail.name}
-          </dd>
+          <dd key={detail.id}>{detail.name}</dd>
         ) : (
-          <dd key={detail} className="mr-2 inline hyphens-auto">
-            {detail}
-          </dd>
+          <dd key={detail}>{detail}</dd>
         );
       })}
     </dl>
@@ -438,8 +411,8 @@ const Genres = () => {
       {genres &&
         genres.map((genre) => {
           return (
-            <dl key={genre} className="block">
-              <dt className="mx-1 inline">{genre}</dt>
+            <dl key={genre}>
+              <dt>{genre}</dt>
             </dl>
           );
         })}
@@ -457,7 +430,7 @@ const LikedSongs = () => {
   }, []);
 
   return (
-    <main className="grid grid-cols-2 gap-2">
+    <main>
       {likedSongs &&
         likedSongs.items.map((song) => {
           return (
