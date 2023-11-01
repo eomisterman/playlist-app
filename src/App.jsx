@@ -1,25 +1,25 @@
-import { Link, Routes, Route, Outlet, useNavigate } from 'react-router-dom';
-import { 
+import { Link, Routes, Route, Outlet, useNavigate } from "react-router-dom";
+import {
   getProfile,
-  getAccessToken, 
-  redirectToAuthCodeFlow, 
-  getSearchTracks, 
+  getAccessToken,
+  redirectToAuthCodeFlow,
+  getSearchTracks,
   getUserPlaylists,
   getUserTopTracks,
   getUserTopArtists,
   getGenreSeeds,
   getUsersLikedSongs,
   getPlaylistTracks,
-  getTrackRecFromTrack
-} from './util/Spotify';
-import { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+  getTrackRecFromTrack,
+} from "./util/Spotify";
+import { useEffect, useState } from "react";
+import PropTypes from "prop-types";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 
 const App = () => {
-return (
-    <section id="app" className='flex m-8'>
+  return (
+    <section id="app" className="m-8 flex">
       <Sidebar />
       <Routes>
         <Route element={<Layout />}>
@@ -38,7 +38,7 @@ return (
       </Routes>
     </section>
   );
-}
+};
 
 /**
  * Layout component
@@ -53,7 +53,7 @@ const Layout = () => {
       </main>
     </section>
   );
-}
+};
 
 /**
  * Sidebar navigation
@@ -61,22 +61,38 @@ const Layout = () => {
  **/
 const Sidebar = () => {
   return (
-    <section id="sidebar" className="basis-48 block p-2">
+    <section id="sidebar" className="block basis-48 p-2">
       <h1 className="mb-8">Sidebar</h1>
-      <Link className="block" to="/">Home</Link>
-      <Link className="block" to="/profile">Profile</Link>
+      <Link className="block" to="/">
+        Home
+      </Link>
+      <Link className="block" to="/profile">
+        Profile
+      </Link>
       {/* <Link className="block">Drafts</Link> */}
-      <Link className="block" to="/search">Search</Link>
-      <Link className="block" to="/playlists">Playlists</Link>
-      <Link className="block" to="/top-songs">Top Songs</Link>
-      <Link className="block" to="/top-artists">Top Artists</Link>
-      <Link className="block" to="/genres">Genres</Link>
-      <Link className="block" to="/liked-songs">Liked Songs</Link>
+      <Link className="block" to="/search">
+        Search
+      </Link>
+      <Link className="block" to="/playlists">
+        Playlists
+      </Link>
+      <Link className="block" to="/top-songs">
+        Top Songs
+      </Link>
+      <Link className="block" to="/top-artists">
+        Top Artists
+      </Link>
+      <Link className="block" to="/genres">
+        Genres
+      </Link>
+      <Link className="block" to="/liked-songs">
+        Liked Songs
+      </Link>
       {/* <h3>Hover (Radio)</h3>
       <button>Log out</button> */}
     </section>
   );
-}
+};
 
 /**
  * Landing page component
@@ -88,9 +104,9 @@ const Home = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!localStorage.getItem('access_token')) {
-      console.log('No token, redirecting to login');
-      navigate('/login');
+    if (!localStorage.getItem("access_token")) {
+      console.log("No token, redirecting to login");
+      navigate("/login");
     } else {
       getProfile().then((profile) => {
         console.log(profile);
@@ -103,14 +119,14 @@ const Home = () => {
     <>
       <h2 className="m-2">Home</h2>
       {profile && <p>{profile.name}</p>}
-    </>    
+    </>
   );
-}
+};
 
 const Login = () => {
   const handleSpotifyLogin = () => {
     redirectToAuthCodeFlow();
-  }
+  };
   return (
     <>
       <h2 className="m-2">Login Component</h2>
@@ -119,29 +135,30 @@ const Login = () => {
       </button>
     </>
   );
-}
+};
 
 const Callback = () => {
   const navigate = useNavigate();
   const params = new URLSearchParams(window.location.search);
-  const code = params.get('code');
-  const responseState = params.get('state');
-  const localState = localStorage.getItem('state');
+  const code = params.get("code");
+  const responseState = params.get("state");
+  const localState = localStorage.getItem("state");
 
   useEffect(() => {
     if (code && responseState === localState) {
-      getAccessToken(code).then(() => {
-        navigate("/");
-      }).catch((error) => {
-        console.error(error);
-        navigate('/login');
-      });
+      getAccessToken(code)
+        .then(() => {
+          navigate("/");
+        })
+        .catch((error) => {
+          console.error(error);
+          navigate("/login");
+        });
     } else {
-      throw new Error('Invalid state or code');
+      throw new Error("Invalid state or code");
     }
   }, [code, responseState, localState, navigate]);
-
-}
+};
 
 const Profile = () => {
   const [user, setUser] = useState(null);
@@ -149,7 +166,7 @@ const Profile = () => {
   useEffect(() => {
     getProfile().then((user) => {
       setUser(user);
-    })
+    });
   }, []);
 
   return (
@@ -161,7 +178,7 @@ const Profile = () => {
 };
 
 const Search = () => {
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState(null);
 
   useEffect(() => {
@@ -170,44 +187,54 @@ const Search = () => {
 
   const handleUpdateSearchTerm = (event) => {
     setSearchTerm(event.target.value);
-  }
+  };
 
   const handleSearch = () => {
-    getSearchTracks(searchTerm).then((results) => {
-      setSearchResults(results);
-    }).catch((error) => {
-      throw new Error("Error fetching search results: ", error);
-    });
-  }
+    getSearchTracks(searchTerm)
+      .then((results) => {
+        setSearchResults(results);
+      })
+      .catch((error) => {
+        throw new Error("Error fetching search results: ", error);
+      });
+  };
 
-  const buttonIcon = <FontAwesomeIcon icon={faMagnifyingGlass} />
+  const buttonIcon = <FontAwesomeIcon icon={faMagnifyingGlass} />;
 
   return (
     <>
       <h1 className="block">Search Component</h1>
-      <label htmlFor="search" className="block">Search</label>
-      <input id="search" 
-        className="inline-block" 
-        type="text" 
-        size="15" 
-        placeholder="Search for music..." 
-        onChange={handleUpdateSearchTerm} />
-      <button 
-        className="inline-block" 
-        onClick={handleSearch} >
-          {buttonIcon}
+      <label htmlFor="search" className="block">
+        Search
+      </label>
+      <input
+        id="search"
+        className="inline-block"
+        type="text"
+        size="15"
+        placeholder="Search for music..."
+        onChange={handleUpdateSearchTerm}
+      />
+      <button className="inline-block" onClick={handleSearch}>
+        {buttonIcon}
       </button>
       <section id="search-results" className="inline">
         <h2>Search Results</h2>
-        {searchResults && searchResults.map((result) => {
-          return (
-            <Card key={result.id} type="track" name={result.name} detailList={result.artists} />
-          );
-        })}
+        {searchResults &&
+          searchResults.map((result) => {
+            return (
+              <Card
+                key={result.id}
+                type="track"
+                name={result.name}
+                detailList={result.artists}
+              />
+            );
+          })}
       </section>
     </>
   );
-}
+};
 
 /**
  * @TODO
@@ -229,34 +256,41 @@ const Playlists = () => {
     getPlaylistTracks(playlistId).then((tracks) => {
       setSelectedPlaylistTracks(tracks);
     });
-  }
+  };
 
   return (
     <>
       <h1>Playlists</h1>
-      {playlists && playlists.items.map((playlist) => {
-        return (
-          <Card key={playlist.id} 
-            id={playlist.id}
-            type="playlist"
-            name={playlist.name}
-            detailList={[playlist.tracks.total, playlist.description]}
-            handleClick={() => {handleSelectPlaylist(playlist.id)}} />
-        );
-      })}
-      {selectedPlaylistTracks && selectedPlaylistTracks.items.map((track) => {
-        return (
-          <Card 
-            key={track.id}
-            id={track.id}
-            type={track.type}
-            name={track.name}
-            detailList={track.artists} />
-        );
-      })}
+      {playlists &&
+        playlists.items.map((playlist) => {
+          return (
+            <Card
+              key={playlist.id}
+              id={playlist.id}
+              type="playlist"
+              name={playlist.name}
+              detailList={[playlist.tracks.total, playlist.description]}
+              handleClick={() => {
+                handleSelectPlaylist(playlist.id);
+              }}
+            />
+          );
+        })}
+      {selectedPlaylistTracks &&
+        selectedPlaylistTracks.items.map((track) => {
+          return (
+            <Card
+              key={track.id}
+              id={track.id}
+              type={track.type}
+              name={track.name}
+              detailList={track.artists}
+            />
+          );
+        })}
     </>
   );
-}
+};
 
 const TopSongs = () => {
   const [topTracks, setTopTracks] = useState(null);
@@ -272,25 +306,41 @@ const TopSongs = () => {
     getTrackRecFromTrack(trackId).then((recs) => {
       setGeneratedRecs([...generatedRecs, recs]);
     });
-  }
+  };
 
   return (
     <main className="">
-      {topTracks && topTracks.map((track) => {
-        return (
-          <Card key={track.id} id={track.id} type="track" name={track.name} detailList={track.artists} handleClick={() => {handleGenerateRecs(track.id)}} />
-        );
-      })}
-      {generatedRecs && generatedRecs.map((recs) => {
-        recs.map((rec) => {
+      {topTracks &&
+        topTracks.map((track) => {
           return (
-            <Card key={rec.id} type={rec.type} name={rec.name} detailList={rec.artists} />
+            <Card
+              key={track.id}
+              id={track.id}
+              type="track"
+              name={track.name}
+              detailList={track.artists}
+              handleClick={() => {
+                handleGenerateRecs(track.id);
+              }}
+            />
           );
-        })
-      })}
+        })}
+      {generatedRecs &&
+        generatedRecs.map((recs) => {
+          recs.map((rec) => {
+            return (
+              <Card
+                key={rec.id}
+                type={rec.type}
+                name={rec.name}
+                detailList={rec.artists}
+              />
+            );
+          });
+        })}
     </main>
   );
-}
+};
 
 const TopArtists = () => {
   const [topArtists, setTopArtists] = useState(null);
@@ -309,60 +359,69 @@ const TopArtists = () => {
         setGeneratedRecs([...generatedRecs, recs]);
       }
     });
-  }
+  };
 
   return (
     <>
       <h1>Top Artists</h1>
-      {topArtists && topArtists.map((artist) => {
-        return (
-          <Card 
-            key={artist.id} 
-            id={artist.id} 
-            type={artist.type} 
-            name={artist.name} 
-            detailList={artist.genres} 
-            handleClick={() => {handleGenerateRecs(artist.id)}} />
-        );
-      })}
-      {generatedRecs && generatedRecs.map((recs) => {
-        recs.map((rec) => {
+      {topArtists &&
+        topArtists.map((artist) => {
           return (
             <Card
-              key={rec.id} 
-              type={rec.type} 
-              name={rec.name} 
-              detailList={rec.artists} />
+              key={artist.id}
+              id={artist.id}
+              type={artist.type}
+              name={artist.name}
+              detailList={artist.genres}
+              handleClick={() => {
+                handleGenerateRecs(artist.id);
+              }}
+            />
           );
-        })
-      })}
+        })}
+      {generatedRecs &&
+        generatedRecs.map((recs) => {
+          recs.map((rec) => {
+            return (
+              <Card
+                key={rec.id}
+                type={rec.type}
+                name={rec.name}
+                detailList={rec.artists}
+              />
+            );
+          });
+        })}
     </>
   );
-}
+};
 
 const Card = ({ type, name, detailList, handleClick }) => {
   return (
     <dl className="my-4" onClick={handleClick}>
       <dt className="block hyphens-auto">{name}</dt>
       {detailList.map((detail) => {
-        return (
-          type == "track" ? 
-            <dd key={detail.id} className="inline hyphens-auto mr-2">{detail.name}</dd> :
-            <dd key={detail} className="inline hyphens-auto mr-2">{detail}</dd>
+        return type == "track" ? (
+          <dd key={detail.id} className="mr-2 inline hyphens-auto">
+            {detail.name}
+          </dd>
+        ) : (
+          <dd key={detail} className="mr-2 inline hyphens-auto">
+            {detail}
+          </dd>
         );
       })}
     </dl>
-  
   );
-}
+};
 
 Card.propTypes = {
   id: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   detailList: PropTypes.array.isRequired,
   type: PropTypes.string.isRequired,
-  handleClick: PropTypes.func
-}
+  handleClick: PropTypes.func,
+};
 
 const Genres = () => {
   const [genres, setGenres] = useState(null);
@@ -376,16 +435,17 @@ const Genres = () => {
   return (
     <>
       <h1>Genres</h1>
-      {genres && genres.map((genre) => {
-        return (
-          <dl key={genre} className="block">
-            <dt className="inline mx-1">{genre}</dt>
-          </dl>
-        );
-      })}
+      {genres &&
+        genres.map((genre) => {
+          return (
+            <dl key={genre} className="block">
+              <dt className="mx-1 inline">{genre}</dt>
+            </dl>
+          );
+        })}
     </>
   );
-}
+};
 
 const LikedSongs = () => {
   const [likedSongs, setLikedSongs] = useState(null);
@@ -398,19 +458,23 @@ const LikedSongs = () => {
 
   return (
     <main className="grid grid-cols-2 gap-2">
-      {likedSongs && likedSongs.items.map((song) => {
-        return (
-          <Card key={song.id} type="track" name={song.name} detailList={song.artists} />
-        );
-      })}
+      {likedSongs &&
+        likedSongs.items.map((song) => {
+          return (
+            <Card
+              key={song.id}
+              type="track"
+              name={song.name}
+              detailList={song.artists}
+            />
+          );
+        })}
     </main>
   );
-}
+};
 
 const NoMatch = () => {
-  return (
-    <h1>404: Nothing to see here</h1>
-  );
-}
+  return <h1>404: Nothing to see here</h1>;
+};
 
 export default App;
