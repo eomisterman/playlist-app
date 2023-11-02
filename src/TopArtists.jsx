@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { getUserTopArtists, getTrackRecFromTrack } from "./util/Spotify";
+import { Container } from "@chakra-ui/react";
 import MusicCard from "./MusicCard";
 
 const TopArtists = () => {
@@ -22,17 +23,18 @@ const TopArtists = () => {
   };
 
   return (
-    <>
-      <h1>Top Artists</h1>
+    <Container maxW={"container.lg"}>
       {topArtists &&
-        topArtists.map((artist) => {
+        topArtists.map((artist, index) => {
           return (
             <MusicCard
               key={artist.id}
               id={artist.id}
+              index={index + 1}
               type={artist.type}
               name={artist.name}
               detailList={artist.genres}
+              images={artist.images}
               handleClick={() => {
                 handleGenerateRecs(artist.id);
               }}
@@ -52,7 +54,7 @@ const TopArtists = () => {
             );
           });
         })}
-    </>
+    </Container>
   );
 };
 

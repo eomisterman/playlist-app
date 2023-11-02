@@ -6,10 +6,7 @@ import {
   getUsersLikedSongs,
 } from "./util/Spotify";
 import { useEffect, useState } from "react";
-import {
-  Flex,
-  Box
-} from "@chakra-ui/react";
+import { Flex, Box, Container } from "@chakra-ui/react";
 import MusicCard from "./MusicCard";
 import Search from "./Search";
 import Login from "./Login";
@@ -187,20 +184,30 @@ const LikedSongs = () => {
     });
   }, []);
 
+  const handleClick = () => {
+    console.log("clicked");
+  };
+
   return (
-    <main>
+    <Container maxW={"container.lg"}>
       {likedSongs &&
-        likedSongs.items.map((song) => {
+        likedSongs.items.map((track, index) => {
           return (
             <MusicCard
-              key={song.id}
+              key={track.id}
+              id={track.id}
+              index={index + 1}
               type="track"
-              name={song.name}
-              detailList={song.artists}
+              name={track.name}
+              detailList={track.artists}
+              images={track.album.images}
+              handleClick={() => {
+                handleClick();
+              }}
             />
           );
         })}
-    </main>
+    </Container>
   );
 };
 
