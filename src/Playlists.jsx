@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react';
-import { getUserPlaylists, getPlaylistTracks } from './util/Spotify';
-import MusicCard from './MusicCard';
+import { useState, useEffect } from "react";
+import { getUserPlaylists, getPlaylistTracks } from "./util/Spotify";
+import { Container } from "@chakra-ui/react";
+import MusicCard from "./MusicCard";
 
 /**
  * @TODO
@@ -25,17 +26,18 @@ const Playlists = () => {
   };
 
   return (
-    <>
-      <h1>Playlists</h1>
+    <Container maxW={"container.lg"}>
       {playlists &&
-        playlists.items.map((playlist) => {
+        playlists.items.map((playlist, index) => {
           return (
             <MusicCard
               key={playlist.id}
               id={playlist.id}
+              index={index + 1}
               type="playlist"
               name={playlist.name}
               detailList={[playlist.tracks.total, playlist.description]}
+              images={playlist.images}
               handleClick={() => {
                 handleSelectPlaylist(playlist.id);
               }}
@@ -54,7 +56,7 @@ const Playlists = () => {
             />
           );
         })}
-    </>
+    </Container>
   );
 };
 

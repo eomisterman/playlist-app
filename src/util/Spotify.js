@@ -165,6 +165,7 @@ export async function getSearchTracks(query) {
               href: track.album.href,
               uri: track.album.uri,
               type: track.album.type,
+              images: track.album.images,
             },
           };
         });
@@ -285,6 +286,7 @@ export async function getPlaylistTracks(playlist_id) {
               href: track.track.album.href,
               uri: track.track.album.uri,
               type: track.track.album.type,
+              images: track.track.album.images,
             },
           };
         });
@@ -486,6 +488,7 @@ export async function getUsersLikedSongs() {
               href: track.track.album.href,
               uri: track.track.album.uri,
               type: track.track.album.type,
+              images: track.track.album.images,
             },
           };
         });
@@ -553,6 +556,7 @@ export async function getTrackRecFromTrack(trackId) {
               href: track.album.href,
               uri: track.album.uri,
               type: track.album.type,
+              images: track.album.images,
             },
           };
         });
@@ -610,6 +614,7 @@ export async function getTrackRecFromArtist(artistId) {
               href: track.album.href,
               uri: track.album.uri,
               type: track.album.type,
+              images: track.album.images,
             },
           };
         });

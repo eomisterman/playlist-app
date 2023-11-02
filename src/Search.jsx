@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import { getSearchTracks } from "./api";
+import { getSearchTracks } from "./util/Spotify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
-import { MusicCard } from "./MusicCard";
+import MusicCard from "./MusicCard";
 
 const Search = () => {
   const [searchTerm, setSearchTerm] = useState("");
