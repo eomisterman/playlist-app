@@ -20,7 +20,7 @@ const TopSongs = () => {
   };
 
   return (
-    <Container id="TopSongsComponent" maxW={"container.lg"} my={4}>
+    <Container id="TopSongsComponent" maxW={"container.lg"} pl={2} pr={0}>
       <Box p={4} shadow={"md"} borderRadius={"md"} backgroundColor={"gray.50"}>
         {topTracks &&
           topTracks.map((track, index) => {
