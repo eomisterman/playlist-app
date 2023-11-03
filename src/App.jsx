@@ -6,7 +6,7 @@ import {
   getUsersLikedSongs,
 } from "./util/Spotify";
 import { useEffect, useState } from "react";
-import { Flex, Box, Container, Link } from "@chakra-ui/react";
+import { Flex, Box, Link } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faHouse,
@@ -85,11 +85,7 @@ const Layout = () => {
  **/
 const Sidebar = () => {
   return (
-    <Flex
-      id="Sidebar-Top-Level"
-      flexDir={"column"}
-      mx={{ base: "10" }}
-    >
+    <Flex id="Sidebar-Top-Level" flexDir={"column"} mx={{ base: "10" }}>
       <Box mt={12} mb={8}>
         <Link
           as={NavLink}
@@ -300,27 +296,25 @@ const LikedSongs = () => {
   };
 
   return (
-    <Container maxW={"container.lg"} pl={2} pr={0}>
-      <Box p={4} shadow={"md"} borderRadius={"md"} backgroundColor={"gray.50"}>
-        {likedSongs &&
-          likedSongs.items.map((track, index) => {
-            return (
-              <MusicCard
-                key={track.id}
-                id={track.id}
-                index={index + 1}
-                type="track"
-                name={track.name}
-                detailList={track.artists}
-                images={track.album.images}
-                handleClick={() => {
-                  handleClick();
-                }}
-              />
-            );
-          })}
-      </Box>
-    </Container>
+    <Box id="Liked-Songs-Box" p={4}>
+      {likedSongs &&
+        likedSongs.items.map((track, index) => {
+          return (
+            <MusicCard
+              key={track.id}
+              id={track.id}
+              index={index + 1}
+              type="track"
+              name={track.name}
+              detailList={track.artists}
+              images={track.album.images}
+              handleClick={() => {
+                handleClick();
+              }}
+            />
+          );
+        })}
+    </Box>
   );
 };
 
