@@ -53,9 +53,28 @@ const App = () => {
  **/
 const Layout = () => {
   return (
-    <Flex p={2} h={"100vh"} backgroundColor={"gray.100"}>
-      <Sidebar />
-      <Outlet />
+    <Flex id="Layout-Component" p={2} h={"100vh"} backgroundColor={"gray.100"}>
+      <Flex
+        id="Sidebar-Flex"
+        minW="56"
+        shadow={"md"}
+        backgroundColor={"gray.50"}
+        borderRadius={"md"}
+        mr={1}
+      >
+        <Sidebar />
+      </Flex>
+      <Flex
+        id="Outlet-Flex"
+        flex={1}
+        shadow={"md"}
+        backgroundColor={"gray.50"}
+        borderRadius={"md"}
+        ml={1}
+        overflow={"auto"}
+      >
+        <Outlet />
+      </Flex>
     </Flex>
   );
 };
@@ -66,120 +85,117 @@ const Layout = () => {
  **/
 const Sidebar = () => {
   return (
-    <Container
-      maxW={"48"}
-      shadow={"lg"}
-      backgroundColor={"gray.50"}
-      borderRadius={"md"}
+    <Flex
+      id="Sidebar-Top-Level"
+      flexDir={"column"}
+      mx={{ base: "10" }}
     >
-      <Flex flexDir={"column"} minW={"24"} mx={{ base: "4" }}>
-        <Box mt={12} mb={8}>
-          <Link
-            as={NavLink}
-            style={{ textDecoration: "none" }}
-            _hover={{ color: "gray.500" }}
-            _activeLink={{ fontWeight: "" }}
-            to="/"
-          >
-            <FontAwesomeIcon icon={faHouse} style={{ paddingRight: 4 }} />
-            Home
-          </Link>
-        </Box>
-        <Box mb={8}>
-          <Link
-            as={NavLink}
-            style={{ textDecoration: "none" }}
-            _hover={{ color: "gray.500" }}
-            _activeLink={{ fontWeight: "bold" }}
-            to="/profile"
-          >
-            <FontAwesomeIcon icon={faUser} style={{ paddingRight: 4 }} />
-            Profile
-          </Link>
-        </Box>
-        {/* <Link>Drafts</Link> */}
-        <Box mb={8}>
-          <Link
-            as={NavLink}
-            style={{ textDecoration: "none" }}
-            _hover={{ color: "gray.500" }}
-            _activeLink={{ fontWeight: "bold" }}
-            to="/search"
-          >
-            <FontAwesomeIcon
-              icon={faMagnifyingGlass}
-              style={{ paddingRight: 4 }}
-            />
-            Search
-          </Link>
-        </Box>
-        <Box mb={8}>
-          <Link
-            as={NavLink}
-            style={{ textDecoration: "none" }}
-            _hover={{ color: "gray.500" }}
-            _activeLink={{ fontWeight: "bold" }}
-            to="/playlists"
-          >
-            <FontAwesomeIcon icon={faFolder} style={{ paddingRight: 4 }} />
-            Playlists
-          </Link>
-        </Box>
-        <Box mb={8}>
-          <Link
-            as={NavLink}
-            style={{ textDecoration: "none" }}
-            _hover={{ color: "gray.500" }}
-            _activeLink={{ fontWeight: "bold" }}
-            to="/top-songs"
-          >
-            <FontAwesomeIcon icon={faRecordVinyl} style={{ paddingRight: 4 }} />
-            Top Songs
-          </Link>
-        </Box>
-        <Box mb={8}>
-          <Link
-            as={NavLink}
-            style={{ textDecoration: "none" }}
-            _hover={{ color: "gray.500" }}
-            _activeLink={{ fontWeight: 900 }}
-            to="/top-artists"
-          >
-            <FontAwesomeIcon
-              icon={faMicrophoneLines}
-              style={{ paddingRight: 4 }}
-            />
-            Top Artists
-          </Link>
-        </Box>
-        <Box mb={8}>
-          <Link
-            as={NavLink}
-            style={{ textDecoration: "none" }}
-            _hover={{ color: "gray.500" }}
-            _activeLink={{ fontWeight: "bold" }}
-            to="/genres"
-          >
-            <FontAwesomeIcon icon={faFolderTree} style={{ paddingRight: 4 }} />
-            Genres
-          </Link>
-        </Box>
-        <Box mb={8}>
-          <Link
-            as={NavLink}
-            style={{ textDecoration: "none" }}
-            _hover={{ color: "gray.500" }}
-            _activeLink={{ fontWeight: "bold" }}
-            to="/liked-songs"
-          >
-            <FontAwesomeIcon icon={faMusic} style={{ paddingRight: 4 }} />
-            Liked Songs
-          </Link>
-        </Box>
-        {/* <h3>Hover (Radio)</h3>
-        <button>Log out</button> */}
-      </Flex>
-    </Container>
+      <Box mt={12} mb={8}>
+        <Link
+          as={NavLink}
+          style={{ textDecoration: "none" }}
+          _hover={{ color: "gray.500" }}
+          _activeLink={{ fontWeight: "" }}
+          to="/"
+        >
+          <FontAwesomeIcon icon={faHouse} style={{ paddingRight: 4 }} />
+          Home
+        </Link>
+      </Box>
+      <Box mb={8}>
+        <Link
+          as={NavLink}
+          style={{ textDecoration: "none" }}
+          _hover={{ color: "gray.500" }}
+          _activeLink={{ fontWeight: "bold" }}
+          to="/profile"
+        >
+          <FontAwesomeIcon icon={faUser} style={{ paddingRight: 4 }} />
+          Profile
+        </Link>
+      </Box>
+      {/* <Link>Drafts</Link> */}
+      <Box mb={8}>
+        <Link
+          as={NavLink}
+          style={{ textDecoration: "none" }}
+          _hover={{ color: "gray.500" }}
+          _activeLink={{ fontWeight: "bold" }}
+          to="/search"
+        >
+          <FontAwesomeIcon
+            icon={faMagnifyingGlass}
+            style={{ paddingRight: 4 }}
+          />
+          Search
+        </Link>
+      </Box>
+      <Box mb={8}>
+        <Link
+          as={NavLink}
+          style={{ textDecoration: "none" }}
+          _hover={{ color: "gray.500" }}
+          _activeLink={{ fontWeight: "bold" }}
+          to="/playlists"
+        >
+          <FontAwesomeIcon icon={faFolder} style={{ paddingRight: 4 }} />
+          Playlists
+        </Link>
+      </Box>
+      <Box mb={8}>
+        <Link
+          as={NavLink}
+          style={{ textDecoration: "none" }}
+          _hover={{ color: "gray.500" }}
+          _activeLink={{ fontWeight: "bold" }}
+          to="/top-songs"
+        >
+          <FontAwesomeIcon icon={faRecordVinyl} style={{ paddingRight: 4 }} />
+          Top Songs
+        </Link>
+      </Box>
+      <Box mb={8}>
+        <Link
+          as={NavLink}
+          style={{ textDecoration: "none" }}
+          _hover={{ color: "gray.500" }}
+          _activeLink={{ fontWeight: 900 }}
+          to="/top-artists"
+        >
+          <FontAwesomeIcon
+            icon={faMicrophoneLines}
+            style={{ paddingRight: 4 }}
+          />
+          Top Artists
+        </Link>
+      </Box>
+      <Box mb={8}>
+        <Link
+          as={NavLink}
+          style={{ textDecoration: "none" }}
+          _hover={{ color: "gray.500" }}
+          _activeLink={{ fontWeight: "bold" }}
+          to="/genres"
+        >
+          <FontAwesomeIcon icon={faFolderTree} style={{ paddingRight: 4 }} />
+          Genres
+        </Link>
+      </Box>
+      <Box mb={8}>
+        <Link
+          as={NavLink}
+          style={{ textDecoration: "none" }}
+          _hover={{ color: "gray.500" }}
+          _activeLink={{ fontWeight: "bold" }}
+          to="/liked-songs"
+        >
+          <FontAwesomeIcon icon={faMusic} style={{ paddingRight: 4 }} />
+          Liked Songs
+        </Link>
+      </Box>
+      {/* <h3>Hover (Radio)</h3>
+      <button>Log out</button> */}
+    </Flex>
   );
 };
 
@@ -257,18 +273,16 @@ const Genres = () => {
   }, []);
 
   return (
-    <Container maxW={"container.lg"}>
-      <Box p={4} shadow={"md"} borderRadius={"md"} backgroundColor={"gray.50"}>
-        {genres &&
-          genres.map((genre) => {
-            return (
-              <dl key={genre}>
-                <dt>{genre}</dt>
-              </dl>
-            );
-          })}
-      </Box>
-    </Container>
+    <Box id="Genre-Top-Level" p={4}>
+      {genres &&
+        genres.map((genre) => {
+          return (
+            <dl key={genre}>
+              <dt>{genre}</dt>
+            </dl>
+          );
+        })}
+    </Box>
   );
 };
 
