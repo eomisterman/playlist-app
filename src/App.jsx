@@ -262,6 +262,24 @@ const Profile = () => {
 const Genres = () => {
   const [genres, setGenres] = useState(null);
 
+  const genreAbbreviation = (genre) => {
+    return `${genre.at(0).toUpperCase()}${genre.at(1)}`;
+  }
+
+  const getAtomicNumber = () => {
+    return Math.floor(Math.random() * 118) + 1;
+  }
+
+  const getClassification = (num) => {
+    switch (num) {
+      case num in [1, ...Array.from() ]
+      default:
+        return "Unknown";
+    }
+    
+
+  }
+
   useEffect(() => {
     getGenreSeeds().then((genres) => {
       setGenres(genres);
