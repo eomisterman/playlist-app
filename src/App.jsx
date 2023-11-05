@@ -1,10 +1,5 @@
 import { NavLink, Routes, Route, Outlet, useNavigate } from "react-router-dom";
-import {
-  getProfile,
-  getAccessToken,
-  getGenreSeeds,
-  getUsersLikedSongs,
-} from "./util/Spotify";
+import { getProfile, getAccessToken, getUsersLikedSongs } from "./util/Spotify";
 import { useEffect, useState } from "react";
 import { Flex, Box, Link } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -24,6 +19,7 @@ import Login from "./Login";
 import TopSongs from "./TopSongs";
 import TopArtists from "./TopArtists";
 import Playlists from "./Playlists";
+import Genres from "./Genres";
 
 const App = () => {
   return (
@@ -256,47 +252,6 @@ const Profile = () => {
       <h1>Profile</h1>
       <h3>{user && user.name}</h3>
     </>
-  );
-};
-
-const Genres = () => {
-  const [genres, setGenres] = useState(null);
-
-  const genreAbbreviation = (genre) => {
-    return `${genre.at(0).toUpperCase()}${genre.at(1)}`;
-  }
-
-  const getAtomicNumber = () => {
-    return Math.floor(Math.random() * 118) + 1;
-  }
-
-  const getClassification = (num) => {
-    switch (num) {
-      case num in [1, ...Array.from() ]
-      default:
-        return "Unknown";
-    }
-    
-
-  }
-
-  useEffect(() => {
-    getGenreSeeds().then((genres) => {
-      setGenres(genres);
-    });
-  }, []);
-
-  return (
-    <Box id="Genre-Top-Level" p={4}>
-      {genres &&
-        genres.map((genre) => {
-          return (
-            <dl key={genre}>
-              <dt>{genre}</dt>
-            </dl>
-          );
-        })}
-    </Box>
   );
 };
 
