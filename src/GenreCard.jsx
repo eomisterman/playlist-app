@@ -1,14 +1,14 @@
-import { Flex, Text, Heading, Center } from "@chakra-ui/react";
+import { Flex, Box, Text, Heading, Center } from "@chakra-ui/react";
 import { PropTypes } from "prop-types";
 
-const GenreCard = ({ name, color, abbrev, atomicNum }) => {
+const GenreCard = ({name, color, abbrev, atomicNum}) => {
   return (
     <Flex
       backgroundColor={`${color}.100`}
-      p={3}
+      p={2}
       pb={2}
-      h={40}
-      w={36}
+      h={32}
+      w={28}
       flexDir={"column"}
       justifyContent={"space-between"}
       alignItems={"center"}
@@ -20,11 +20,15 @@ const GenreCard = ({ name, color, abbrev, atomicNum }) => {
         {atomicNum}
       </Text>
       <Center h="100%">
-        <Heading color={`${color}.500`} size={"4xl"}>
+        <Heading color={`${color}.500`} fontSize={"5xl"}>
           {abbrev}
         </Heading>
       </Center>
-      <Text color={`${color}.500`}>{name}</Text>
+      <Box textAlign={"center"}>
+        <Text id="Genre-Name" color={`${color}.500`} fontSize={"xs"}>
+          {name}
+        </Text>
+      </Box>
     </Flex>
   );
 };

@@ -1,7 +1,7 @@
 import { NavLink, Routes, Route, Outlet, useNavigate } from "react-router-dom";
 import { getProfile, getAccessToken, getUsersLikedSongs } from "./util/Spotify";
 import { useEffect, useState } from "react";
-import { Flex, Box, Link } from "@chakra-ui/react";
+import { Flex, SimpleGrid, Box, Link } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faHouse,
@@ -25,6 +25,7 @@ const App = () => {
   return (
     <section id="app">
       <Routes>
+        <Route path="/test" element={<Test />} />
         <Route path="/login" element={<Login />} />
         <Route path="/callback" element={<Callback />} />
         <Route element={<Layout />}>
@@ -43,6 +44,22 @@ const App = () => {
   );
 };
 
+const Test = () => {
+  return (
+    <Box>
+      <SimpleGrid minChildWidth='120px' spacing='40px'>
+      <Box bg='tomato' height='80px'></Box>
+      <Box bg='tomato' height='80px'></Box>
+      <Box bg='tomato' height='80px'></Box>
+      <Box bg='tomato' height='80px'></Box>
+      <Box bg='tomato' height='80px'></Box>
+      <Box bg='tomato' height='80px'></Box>
+    </SimpleGrid>
+    </Box>
+    
+  );
+}
+
 /**
  * Layout component
  * Wraps all other components
@@ -60,7 +77,7 @@ const Layout = () => {
       >
         <Sidebar />
       </Flex>
-      <Flex
+      <Box
         id="Outlet-Flex"
         flex={1}
         shadow={"md"}
@@ -70,7 +87,7 @@ const Layout = () => {
         overflow={"auto"}
       >
         <Outlet />
-      </Flex>
+      </Box>
     </Flex>
   );
 };

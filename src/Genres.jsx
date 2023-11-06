@@ -91,20 +91,23 @@ const Genres = () => {
   }, []);
 
   return (
-    <SimpleGrid id="Genre-Top-Level" p={4} columns={[2, 3, null]} spacing={2}>
-      {genres &&
-        genres.map((genre, index) => {
-          return (
-            <GenreCard
-              key={`${genre}${index}`}
-              name={genre.name}
-              abbrev={genre.abbrev}
-              atomicNum={genre.atomicNum}
-              color={genre.color}
-            />
-          );
-        })}
-    </SimpleGrid>
+    <Box>
+      <SimpleGrid id="Genre-Top-Level" p={8} minChildWidth={24} spacingY={2} spacingX={6}>
+        {genres &&
+          genres.map((genre, index) => {
+            return (
+              <GenreCard
+                key={`${genre}${index}`}
+                name={genre.name}
+                abbrev={genre.abbrev}
+                atomicNum={genre.atomicNum}
+                color={genre.color}
+              />
+            );
+          })}
+      </SimpleGrid>
+    </Box>
+    
   );
 };
 
