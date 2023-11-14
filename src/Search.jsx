@@ -27,47 +27,55 @@ const Search = () => {
   };
 
   return (
-    <Flex id="Search-Box" p={4} flexDir="column">
-      <Flex
-        w="fit-content"
-        h="fit-content"
-        p={2}
-        borderRadius="full"
-        bg="gray.200"
-        _hover={{ border: "1px solid", borderColor: "blackAlpha.500" }}
-      >
-        <Center>
-          <Search2Icon boxSize={4} m={2} />
+    <Flex id="Search-Box" p={4} flexDir="column" width="100%">
+      <Flex margin="0 auto" mb={3} h={16}>
+        <Center h="100%">
+          <Flex
+            flex="1 1 20rem"
+            h="fit-content"
+            p={2}
+            borderRadius="full"
+            bg="gray.200"
+            _hover={{ border: "1px solid", borderColor: "blackAlpha.200" }}
+          >
+            <Center>
+              <Search2Icon boxSize={4} m={2} />
+            </Center>
+            <Input
+              id="search"
+              size="sm"
+              variant="unstyled"
+              ml={2}
+              mr={3}
+              placeholder="Search for music..."
+              onChange={handleUpdateSearchTerm}
+              onKeyUpCapture={(event) => {
+                event.preventDefault();
+                if (event.key === "Enter") {
+                  handleSearch();
+                }
+              }}
+            />
+          </Flex>
         </Center>
-        <Input
-          id="search"
-          size="sm"
-          variant="unstyled"
-          ml={2}
-          mr={3}
-          placeholder="Search for music..."
-          onChange={handleUpdateSearchTerm}
-          onKeyUpCapture={(event) => {
-            event.preventDefault();
-            if (event.key === "Enter") {
-              handleSearch();
-            }
-          }}
-        />
       </Flex>
-      <section id="search-results">
+
+      <Box id="Search-Results">
         {searchResults &&
-          searchResults.map((result) => {
+          searchResults.map((result, index) => {
             return (
               <MusicCard
                 key={result.id}
+                id={result.id}
+                index={index + 1}
                 type="track"
                 name={result.name}
                 detailList={result.artists}
+                images={result.album.images}
               />
             );
           })}
-      </section>
+      </Box>
     </Flex>
   );
 };
