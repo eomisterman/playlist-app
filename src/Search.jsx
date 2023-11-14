@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
 import { getSearchTracks } from "./util/Spotify";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
-import { Box } from "@chakra-ui/react";
+import { Flex, Center, Input, Text, Button, Box } from "@chakra-ui/react";
+import { Search2Icon } from "@chakra-ui/icons";
 import MusicCard from "./MusicCard";
 
 const Search = () => {
@@ -27,34 +26,57 @@ const Search = () => {
       });
   };
 
-  const buttonIcon = <FontAwesomeIcon icon={faMagnifyingGlass} />;
-
   return (
-    <Box id="Search-Box" p={4}>
-      <label htmlFor="search">Search</label>
-      <input
-        id="search"
-        type="text"
-        size="15"
-        placeholder="Search for music..."
-        onChange={handleUpdateSearchTerm}
-      />
-      <button onClick={handleSearch}>{buttonIcon}</button>
-      <section id="search-results">
-        <h2>Search Results</h2>
+    <Flex id="Search-Box" p={4} flexDir="column" width="100%">
+      <Flex margin="0 auto" mb={3} h={16}>
+        <Center h="100%">
+          <Flex
+            flex="1 1 20rem"
+            h="fit-content"
+            p={2}
+            borderRadius="full"
+            bg="gray.200"
+            _hover={{ border: "1px solid", borderColor: "blackAlpha.200" }}
+          >
+            <Center>
+              <Search2Icon boxSize={4} m={2} />
+            </Center>
+            <Input
+              id="search"
+              size="sm"
+              variant="unstyled"
+              ml={2}
+              mr={3}
+              placeholder="Search for music..."
+              onChange={handleUpdateSearchTerm}
+              onKeyUpCapture={(event) => {
+                event.preventDefault();
+                if (event.key === "Enter") {
+                  handleSearch();
+                }
+              }}
+            />
+          </Flex>
+        </Center>
+      </Flex>
+
+      <Box id="Search-Results">
         {searchResults &&
-          searchResults.map((result) => {
+          searchResults.map((result, index) => {
             return (
               <MusicCard
                 key={result.id}
+                id={result.id}
+                index={index + 1}
                 type="track"
                 name={result.name}
                 detailList={result.artists}
+                images={result.album.images}
               />
             );
           })}
-      </section>
-    </Box>
+      </Box>
+    </Flex>
   );
 };
 

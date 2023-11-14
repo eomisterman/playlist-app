@@ -19,6 +19,7 @@ const MusicCard = ({ type, name, detailList, images, handleClick, index }) => {
 
   return (
     <Flex
+      id="Music-Card-Flex"
       onClick={handleClick}
       my={1}
       direction={{ base: "row" }}
@@ -26,6 +27,7 @@ const MusicCard = ({ type, name, detailList, images, handleClick, index }) => {
       shadow={"md"}
       backgroundColor={"whiteAlpha.800"}
       maxH={"fit-content"}
+      minW="250px"
       borderRadius={"md"}
       _hover={{ shadow: "lg", backgroundColor: "whiteAlpha.600" }}
     >
