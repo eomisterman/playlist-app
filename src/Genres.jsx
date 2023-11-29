@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 // import { getGenreSeeds } from './util/Spotify';
-import { Box, SimpleGrid } from "@chakra-ui/react";
+import { Grid } from "@chakra-ui/react";
 import GenreCard from "./GenreCard";
 import genresJson from "./static/genres.json";
 
@@ -91,7 +91,16 @@ const Genres = () => {
   }, []);
 
   return (
-    <SimpleGrid id="Genre-Top-Level" p={4} columns={[2, 3, null]} spacing={2}>
+    <Grid
+      id="Genre-Top-Level"
+      justifyContent="center"
+      gridColumnGap={4}
+      gridRowGap={4}
+      gridTemplateColumns="repeat(auto-fill, 144px)"
+      px={4}
+      py={8}
+      w="full"
+    >
       {genres &&
         genres.map((genre, index) => {
           return (
@@ -104,7 +113,7 @@ const Genres = () => {
             />
           );
         })}
-    </SimpleGrid>
+    </Grid>
   );
 };
 
