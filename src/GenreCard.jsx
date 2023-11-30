@@ -15,10 +15,6 @@ const GenreCard = ({ name, color, abbrev, atomicNum }) => {
       justifyContent={"space-between"}
       alignItems={"center"}
       borderRadius={"sm"}
-      filter={"drop-shadow(1px 1px 5px lightgrey)"}
-      transition="filter 2s linear"
-      _hover={{ filter: "drop-shadow(2px 2px 10px lightgrey)" }}
-      _focus={{ filter: "drop-shadow(2px 2px 10px lightgrey)" }}
     >
       <Text color={`${color}.500`} alignSelf={"flex-start"}>
         {atomicNum}
