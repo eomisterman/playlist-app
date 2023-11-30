@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { getUserTopTracks, getTrackRecFromTrack } from "./util/Spotify";
-import { Box } from "@chakra-ui/react";
+import { Box, Grid } from "@chakra-ui/react";
 import MusicCard from "./MusicCard";
 
 const TopSongs = () => {
@@ -20,7 +20,14 @@ const TopSongs = () => {
   };
 
   return (
-    <Box id="Top-Songs-Box" p={4}>
+    <Grid id="Top-Songs-Box" p={4}
+      gridTemplateColumns="repeat(2, 1fr)"
+      gridAutoRows="48px"
+      gridGap={2}
+      px={4}
+      py={8}
+      w="full"
+    >
       {topTracks &&
         topTracks.map((track, index) => {
           return (
@@ -51,7 +58,7 @@ const TopSongs = () => {
             );
           });
         })}
-    </Box>
+    </Grid>
   );
 };
 

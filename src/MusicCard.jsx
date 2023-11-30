@@ -27,11 +27,13 @@ const MusicCard = ({ type, name, detailList, images, handleClick, index }) => {
       shadow={"md"}
       backgroundColor={"whiteAlpha.800"}
       maxH={"fit-content"}
+      minH={12}
+      alignItems={"center"}
       minW="250px"
       borderRadius={"md"}
       _hover={{ shadow: "lg", backgroundColor: "whiteAlpha.600" }}
     >
-      <Center justifyContent="flex-start" alignItems="center" w="100%" h="100%">
+      <Center justifyContent="flex-start" w="100%" h="100%">
         <Box minW={12}>
           <Text color={"gray.400"} fontSize={"sm"} textAlign={"right"} mr={5}>
             {index}

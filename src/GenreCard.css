@@ -1,8 +1,10 @@
 .Genre-Card {
   scale: none;
-  transition: scale 0.2s ease-in-out;
+  transition: scale .2s ease-in-out, filter .2s ease-in-out;
+  filter: drop-shadow(1px 1px 5px lightgrey);
 }
 
 .Genre-Card:hover {
   scale: 1.1;
+  filter: drop-shadow(2px 2px 10px lightgrey);
 }

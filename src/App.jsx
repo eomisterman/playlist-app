@@ -1,7 +1,7 @@
 import { NavLink, Routes, Route, Outlet, useNavigate } from "react-router-dom";
 import { getProfile, getAccessToken, getUsersLikedSongs } from "./util/Spotify";
 import { useEffect, useState } from "react";
-import { Flex, Box, Link } from "@chakra-ui/react";
+import { Flex, Box, Link, Grid } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faHouse,
@@ -49,7 +49,13 @@ const App = () => {
  **/
 const Layout = () => {
   return (
-    <Flex id="Layout-Component" p={2} h={"100vh"} backgroundColor={"gray.100"}>
+    <Flex
+      id="Layout-Component"
+      p={2}
+      h={"100vh"}
+      backgroundColor={"gray.100"}
+      color={"blackAlpha.700"}
+    >
       <Flex
         id="Sidebar-Flex"
         minW="56"
@@ -269,7 +275,16 @@ const LikedSongs = () => {
   };
 
   return (
-    <Box id="Liked-Songs-Box" p={4}>
+    <Grid
+      id="Liked-Songs-Box"
+      p={4}
+      gridTemplateColumns="repeat(2, 1fr)"
+      gridAutoRows="48px"
+      gridGap={2}
+      px={4}
+      py={8}
+      w="full"
+    >
       {likedSongs &&
         likedSongs.items.map((track, index) => {
           return (
@@ -287,7 +302,7 @@ const LikedSongs = () => {
             />
           );
         })}
-    </Box>
+    </Grid>
   );
 };
 
